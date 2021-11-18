@@ -11,7 +11,6 @@
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
 // CmfcmfcDlg 대화 상자
 CmfcmfcDlg::CmfcmfcDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFCMFC_DIALOG, pParent)
@@ -27,6 +26,7 @@ void CmfcmfcDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_CHECK3, checkbox3);
 	DDX_Control(pDX, IDC_CHECK4, checkbox4);
 	DDX_Control(pDX, IDC_CHECK5, checkbox5);
+	DDX_Control(pDX, IDC_CHECK6, checkbox6);
 	DDX_Control(pDX, IDC_EDIT1, edit1);
 }
 
@@ -55,6 +55,7 @@ BOOL CmfcmfcDlg::OnInitDialog()
 	checkbox3.SetCheck(BST_UNCHECKED);
 	checkbox4.SetCheck(BST_UNCHECKED);
 	checkbox5.SetCheck(BST_UNCHECKED);
+	checkbox6.SetCheck(BST_UNCHECKED);
 
 	return TRUE;  // 포커스를 컨트롤에 설정하지 않으면 TRUE를 반환합니다.
 }
@@ -95,32 +96,6 @@ HCURSOR CmfcmfcDlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
-UINT ThreadWaitProcessKill(LPVOID aParam) {
-	//프로세스 감시 스레드
-	while (true) {
-		Sleep(500);
-		KEEPER_MANAGER->Get_ProcessMng()->ProcessLoad();
-	}
-	return 0;
-}
-UINT ThreadWaitWebsiteBlock(LPVOID aParm) {
-	 //웹사이트 감시 스레드
-	while (true)
-	{
-		Sleep(500);
-		KEEPER_MANAGER->Get_WebsiteMng()->WidgetLoad();
-	}
-	return 0;
-}
-UINT ThreadWaitEncryption(LPVOID aParm) {
-	KEEPER_MANAGER->Get_CryptoMng()->Encryption();
-	return 0;
-}
-UINT ThreadWaitDecryption(LPVOID aParm) {
-	KEEPER_MANAGER->Get_CryptoMng()->Decryption();
-	return 0;
-}
-
 void CmfcmfcDlg::OnBnClickedButton1()
 {
 	CString szMsg;
@@ -130,69 +105,47 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	
 	if (checkbox1.GetCheck() == BST_CHECKED) // 체크박스1 체크여부 소프트웨어 차단
 	{
-		checkSoftThread(); //스레드 실행상태 체크
+		KEEPER_MANAGER->Get_ProcessMng()->checkThread();	// 소프트웨어 감시 스레드 실행상태 체크
 	}
 	else {
-		if (KEEPER_MANAGER->Get_ProcessMng()->GetThread() != NULL)
-			KEEPER_MANAGER->Get_ProcessMng()->GetThread()->SuspendThread(); // 프로세스 감시 스레드 멈춤
+		KEEPER_MANAGER->Get_ProcessMng()->suspendThread();	// 스레드 멈춤
 	}
 
 	if (checkbox2.GetCheck() == BST_CHECKED) // 체크박스2 체크여부 웹사이트 차단
 	{
 
-		checkWebThread(); 
+		KEEPER_MANAGER->Get_WebsiteMng()->checkThread();	// 웹사이트 감시 스레드 실행상태 체크
 	}
 	else {
-		if (KEEPER_MANAGER->Get_WebsiteMng()->GetThread() != NULL)
-			KEEPER_MANAGER->Get_WebsiteMng()->GetThread()->SuspendThread(); // 웹사이트 감시 스레드 멈춤
+		KEEPER_MANAGER->Get_WebsiteMng()->suspendThread();	// 스레드 멈춤
 	}
 
 	if (checkbox3.GetCheck() == BST_CHECKED) // 체크박스3 체크여부 검사
 	{
+		// path를 기준으로 모든 디렉토리 , 파일 리스트 찾기
 		string path = "C:\\Users\\USER\\Desktop\\*";
 		KEEPER_MANAGER->Get_DirectoryMng()->FindFileList(path);
 	}
 
-	if (checkbox4.GetCheck() == BST_CHECKED) // 체크박스4 체크여부 암호화
+	if (checkbox4.GetCheck() == BST_CHECKED)	// 체크박스 4 암호화 체크여부
 	{
-		KEEPER_MANAGER->Get_CryptoMng()->StartCryptoThread(ThreadWaitEncryption);
+		//암호화
+		KEEPER_MANAGER->Get_CryptoMng()->StartThread(true);
 	}
 	
-	if (checkbox5.GetCheck() == BST_CHECKED) {
-		KEEPER_MANAGER->Get_CryptoMng()->StartCryptoThread(ThreadWaitDecryption);
+	if (checkbox5.GetCheck() == BST_CHECKED) {	// 체크박스 5 복호화 체크여부
+		//복호화
+		KEEPER_MANAGER->Get_CryptoMng()->StartThread(false);
+	}
+
+	if (checkbox6.GetCheck() == BST_CHECKED)	// 체크박스 6 키차단 체크여부
+	{
+		// 키보드 후크 로드
+		KEEPER_MANAGER->Get_HookMng()->checkThread();
+	}
+	else {
+		KEEPER_MANAGER->Get_HookMng()->suspendThread();
 	}
 
 	AfxMessageBox(szMsg);
-}
-
-void CmfcmfcDlg::checkSoftThread()
-{
-	if (KEEPER_MANAGER->Get_ProcessMng()->GetThread() != NULL)
-	{
-		//AfxMessageBox(TEXT("차단 감시 스레드가 이미 실행중입니다."));
-		KEEPER_MANAGER->Get_ProcessMng()->GetThread()->ResumeThread();
-	}
-	else {
-		cout << "스레드 실행" << "\n";
-		KEEPER_MANAGER->Get_ProcessMng()->StartSwBlock(ThreadWaitProcessKill);
-	}
-	if (KEEPER_MANAGER->Get_ProcessMng()->GetThread() == NULL)
-	{
-		AfxMessageBox(TEXT("소프트웨어 감시 스레드 실행 실패"));
-	}
-}
-
-void CmfcmfcDlg::checkWebThread()
-{
-	if (KEEPER_MANAGER->Get_WebsiteMng()->GetThread() != NULL)
-	{
-		KEEPER_MANAGER->Get_WebsiteMng()->GetThread()->ResumeThread();
-	}
-	else {
-		KEEPER_MANAGER->Get_WebsiteMng()->StartWsBlock(ThreadWaitWebsiteBlock);
-	}
-	if (KEEPER_MANAGER->Get_WebsiteMng()->GetThread() == NULL)
-	{
-		AfxMessageBox(TEXT("웹사이트 감시 스레드 실행 실패"));
-	}
 }

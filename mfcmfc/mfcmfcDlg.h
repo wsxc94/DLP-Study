@@ -23,7 +23,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();  // Button1 click event 
-	void checkSoftThread();				// 소프트웨어 차단 스레드가 실행되어 있는지 체크
 	void checkWebThread();				// 웹사이트 차단 스레드가 실행되어 있는지 체크
 	CButton checkbox1;
 	CButton checkbox2;
@@ -31,4 +30,5 @@ public:
 	CButton checkbox4;
 	CEdit edit1;
 	CButton checkbox5;
+	CButton checkbox6;
 };

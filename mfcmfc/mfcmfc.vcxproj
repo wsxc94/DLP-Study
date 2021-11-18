@@ -188,6 +188,7 @@
     <ClInclude Include="cryptoManager.h" />
     <ClInclude Include="directoryManager.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="hookManager.h" />
     <ClInclude Include="mfcmfc.h" />
     <ClInclude Include="mfcmfcDlg.h" />
     <ClInclude Include="pch.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="singletonBase.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Thread.h" />
     <ClInclude Include="uiAutomationManager.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="websiteManager.h" />
@@ -203,6 +205,7 @@
   <ItemGroup>
     <ClCompile Include="cryptoManager.cpp" />
     <ClCompile Include="directoryManager.cpp" />
+    <ClCompile Include="hookManager.cpp" />
     <ClCompile Include="mfcmfc.cpp" />
     <ClCompile Include="mfcmfcDlg.cpp" />
     <ClCompile Include="pch.cpp">
@@ -213,6 +216,7 @@
     </ClCompile>
     <ClCompile Include="keeperManager.cpp" />
     <ClCompile Include="processManager.cpp" />
+    <ClCompile Include="Thread.cpp" />
     <ClCompile Include="uiAutomationManager.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="websiteManager.cpp" />

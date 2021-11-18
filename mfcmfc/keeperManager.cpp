@@ -7,6 +7,7 @@ keeperManager::keeperManager()
 	websiteMng = make_shared<websiteManager>();
 	directoryMng = make_shared<directoryManager>();
 	cryptoMng = make_shared<cryptoManager>();
+	hookMng = make_shared<hookManager>();
 }
 
 keeperManager::~keeperManager()

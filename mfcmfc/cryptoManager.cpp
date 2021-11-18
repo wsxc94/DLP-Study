@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "cryptoManager.h"
 
-cryptoManager::cryptoManager() : cryptoThread(NULL) , cryptoCode(25)
+cryptoManager::cryptoManager() : cryptoCode(25)
 {
 }
 
@@ -98,7 +98,30 @@ void cryptoManager::Decryption()
 	}
 }
 
-void cryptoManager::StartCryptoThread(AFX_THREADPROC thread)
+void cryptoManager::StartThread(bool check)
 {
-	cryptoThread = AfxBeginThread(thread, NULL);
+	/**********************************
+	** true = 암호화  false = 복호화 **
+	**********************************/
+	cryptoManager* param = new cryptoManager;
+	param = this;
+
+	if (check) thread = AfxBeginThread(EncryptoThread, param); // 암호화 스레드 실행
+	else thread = AfxBeginThread(DecryptoThread, param);		  // 복호화 스레드 실행
+}
+
+UINT cryptoManager::EncryptoThread(LPVOID aParam)
+{
+	cryptoManager* pThis = (cryptoManager*)aParam;
+	pThis->Encryption();
+
+	return 0;
+}
+
+UINT cryptoManager::DecryptoThread(LPVOID aParam)
+{
+	cryptoManager* pThis = (cryptoManager*)aParam;
+	pThis->Decryption();
+
+	return 0;
 }

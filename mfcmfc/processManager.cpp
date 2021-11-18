@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "processManager.h"
 
-processManager::processManager() : sw_block_Thread(NULL)
+processManager::processManager()
 {
 	// 소프트웨어 차단 리스트
 	sw_block_list.emplace_back("notepad.exe");
@@ -10,7 +10,6 @@ processManager::processManager() : sw_block_Thread(NULL)
 
 processManager::~processManager()
 {
-	SAFE_DELETE(sw_block_Thread);
 }
 
 bool processManager::GetProcessModule(DWORD dwPID, string sProcessName)
@@ -75,7 +74,9 @@ void processManager::ProcessLoad()
 						{
 							unsigned long nCode; //프로세스 상태 코드
 							GetExitCodeProcess(hProcess, &nCode); // 프로세스 종료 함수
+							cout << processName << "를 차단했습니다." << "\n";
 							AfxMessageBox(_T("소프트웨어 차단"));
+							
 						}
 						CloseHandle(hProcess);
 					}
@@ -86,7 +87,23 @@ void processManager::ProcessLoad()
 	CloseHandle(hProcessSnap);
 }
 
-void processManager::StartSwBlock(AFX_THREADPROC thread)
+void processManager::StartThread()
 {
-	sw_block_Thread = AfxBeginThread(thread, NULL);
+	processManager* param = new processManager;
+	param = this;
+
+	thread = AfxBeginThread(ThreadUpdata, param);
+}
+
+UINT processManager::ThreadUpdata(LPVOID aParam)
+{
+	processManager* pThis = (processManager*)aParam;
+
+	while (true)
+	{
+		Sleep(500);
+		pThis->ProcessLoad();
+	}
+
+	return 0;
 }

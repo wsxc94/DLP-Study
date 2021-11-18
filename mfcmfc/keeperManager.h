@@ -4,6 +4,7 @@
 #include "websiteManager.h"
 #include "directoryManager.h"
 #include "cryptoManager.h"
+#include "hookManager.h"
 
 class keeperManager : public singletonBase <keeperManager>
 {
@@ -12,6 +13,7 @@ private:
 	shared_ptr<websiteManager> websiteMng;		// UI automation , 사이트 차단 매니저
 	shared_ptr<directoryManager> directoryMng;	// 디렉토리 검사 매니저
 	shared_ptr<cryptoManager> cryptoMng;		// 암호화 복호화 매니저
+	shared_ptr<hookManager> hookMng;		// window 후크 매니저
 public:
 	keeperManager();
 	~keeperManager(); 
@@ -20,5 +22,6 @@ public:
 	websiteManager* Get_WebsiteMng() { return websiteMng.get(); }
 	directoryManager* Get_DirectoryMng() { return directoryMng.get(); }
 	cryptoManager* Get_CryptoMng() { return cryptoMng.get(); }
+	hookManager* Get_HookMng() { return hookMng.get(); }
 };
 

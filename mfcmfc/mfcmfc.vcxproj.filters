@@ -57,6 +57,12 @@
     <ClInclude Include="cryptoManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="hookManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Thread.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mfcmfc.cpp">
@@ -87,6 +93,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="cryptoManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="hookManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Thread.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

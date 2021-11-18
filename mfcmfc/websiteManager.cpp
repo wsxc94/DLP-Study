@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "websiteManager.h"
 
-websiteManager::websiteManager() : wsBlockThread(NULL)
+websiteManager::websiteManager()
 {
 	// 웹사이트 차단 리스트
 	wsBlockList.emplace_back(".naver.");
@@ -10,7 +10,6 @@ websiteManager::websiteManager() : wsBlockThread(NULL)
 
 websiteManager::~websiteManager()
 {
-	SAFE_DELETE(wsBlockThread);
 }
 
 void websiteManager::WidgetLoad()
@@ -18,14 +17,9 @@ void websiteManager::WidgetLoad()
 	FindWindowWidget();
 }
 
-void websiteManager::StartWsBlock(AFX_THREADPROC thread)
-{
-	wsBlockThread = AfxBeginThread(thread, NULL);
-}
-
 void websiteManager::FindWindowWidget()
 {
-	//CoInitialize(NULL);
+	CoInitialize(NULL);
 
 	HWND hwnd = NULL;	// 웹사이트의 정보를 받아올 핸들
 
@@ -74,5 +68,26 @@ void websiteManager::FindWindowWidget()
 		}
 		break;
 	}
-	//CoUninitialize();
+	CoUninitialize();
+}
+
+void websiteManager::StartThread()
+{
+	websiteManager* param = new websiteManager;
+	param = this;
+
+	thread = AfxBeginThread(ThreadUpdata, param);
+}
+
+UINT websiteManager::ThreadUpdata(LPVOID aParam)
+{
+	websiteManager* pThis = (websiteManager*)aParam;
+
+	while (true)
+	{
+		Sleep(500);
+		pThis->WidgetLoad();
+	}
+
+	return 0;
 }
