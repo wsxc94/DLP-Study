@@ -1,5 +1,4 @@
-# MfcStudy
-- DLP 시스템 샘플 구현
+# DLP Solution Study
 * 소프트웨어 차단
 * 웹사이트 차단
 * 파일 암호화
