@@ -1,105 +1,145 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="소스 파일">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="리소스 파일">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{1e37b6ea-1e12-4cad-960f-0dd401c704c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\cpp">
+      <UniqueIdentifier>{780bb75c-bcd8-41f9-add5-e61af5b33591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Util\header">
+      <UniqueIdentifier>{27e7b3cf-2ee4-4d2c-a452-c52f1ad59717}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{d8cbdd94-a6dd-47c9-a175-808876b705e8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\cpp">
+      <UniqueIdentifier>{7c9ac350-77b1-459c-a3e5-e3c1e48f724b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\header">
+      <UniqueIdentifier>{d8f4102d-134e-403b-b527-058d7b146b67}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭">
+      <UniqueIdentifier>{bf4b7196-d8bd-4ccd-b879-d7d07aaca9f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\정보유출방지">
+      <UniqueIdentifier>{1a87c451-c995-4eb7-aea1-7d5897dd2b54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\민감정보관리">
+      <UniqueIdentifier>{4f4e25b4-39f8-4283-9c28-5d26fbd88ccb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\소프트웨어실행관리">
+      <UniqueIdentifier>{d3b4d856-a7a4-4600-b967-097ac6971537}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\웹사이트접속관리">
+      <UniqueIdentifier>{4c119b0f-5fd7-404b-a9d8-04f1bbb9881c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\Manager">
+      <UniqueIdentifier>{52498e0f-a19e-49c5-82b9-40487925f4e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\Manager\cpp">
+      <UniqueIdentifier>{ce35616c-c63b-4b29-8cb9-d9dc7674c184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\Manager\header">
+      <UniqueIdentifier>{75245be0-d3e6-4f9a-8656-7180bdecad2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\정보유출방지\화면캡처차단정책">
+      <UniqueIdentifier>{1fd5c00a-1f40-46d2-8e26-36e7c8719e45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="정책탭\정보유출방지\화면캡처차단정책\PrintScreenKey차단기능">
+      <UniqueIdentifier>{06bad50b-6f06-49e2-a9f5-cf290c71cc00}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mfcmfc.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="mfcmfcDlg.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="keeperManager.h">
+      <Filter>정책탭\Manager\header</Filter>
     </ClInclude>
     <ClInclude Include="framework.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="keeperManager.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Util\header</Filter>
     </ClInclude>
     <ClInclude Include="singletonBase.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Util\header</Filter>
     </ClInclude>
-    <ClInclude Include="uiAutomationManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="util.h">
+      <Filter>Util\header</Filter>
     </ClInclude>
-    <ClInclude Include="processManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="mfcmfc.h">
+      <Filter>Main\header</Filter>
     </ClInclude>
-    <ClInclude Include="websiteManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="mfcmfcDlg.h">
+      <Filter>Main\header</Filter>
     </ClInclude>
-    <ClInclude Include="directoryManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="targetver.h">
+      <Filter>Main\header</Filter>
     </ClInclude>
-    <ClInclude Include="cryptoManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Resource.h">
+      <Filter>Main\header</Filter>
     </ClInclude>
-    <ClInclude Include="hookManager.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="pch.h">
+      <Filter>Main\header</Filter>
     </ClInclude>
     <ClInclude Include="Thread.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>Util\header</Filter>
+    </ClInclude>
+    <ClInclude Include="processManager.h">
+      <Filter>정책탭\소프트웨어실행관리</Filter>
+    </ClInclude>
+    <ClInclude Include="websiteManager.h">
+      <Filter>정책탭\웹사이트접속관리</Filter>
+    </ClInclude>
+    <ClInclude Include="directoryManager.h">
+      <Filter>정책탭\민감정보관리</Filter>
+    </ClInclude>
+    <ClInclude Include="cryptoManager.h">
+      <Filter>정책탭\민감정보관리</Filter>
+    </ClInclude>
+    <ClInclude Include="uiAutomationManager.h">
+      <Filter>정책탭\웹사이트접속관리</Filter>
+    </ClInclude>
+    <ClInclude Include="hookManager.h">
+      <Filter>정책탭\정보유출방지\화면캡처차단정책\PrintScreenKey차단기능</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mfcmfc.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="mfcmfcDlg.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="keeperManager.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>정책탭\Manager\cpp</Filter>
     </ClCompile>
     <ClCompile Include="util.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Util\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="uiAutomationManager.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="mfcmfc.cpp">
+      <Filter>Main\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="processManager.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="mfcmfcDlg.cpp">
+      <Filter>Main\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="websiteManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="directoryManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="cryptoManager.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="hookManager.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="pch.cpp">
+      <Filter>Main\cpp</Filter>
     </ClCompile>
     <ClCompile Include="Thread.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>Util\cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="processManager.cpp">
+      <Filter>정책탭\소프트웨어실행관리</Filter>
+    </ClCompile>
+    <ClCompile Include="websiteManager.cpp">
+      <Filter>정책탭\웹사이트접속관리</Filter>
+    </ClCompile>
+    <ClCompile Include="directoryManager.cpp">
+      <Filter>정책탭\민감정보관리</Filter>
+    </ClCompile>
+    <ClCompile Include="cryptoManager.cpp">
+      <Filter>정책탭\민감정보관리</Filter>
+    </ClCompile>
+    <ClCompile Include="uiAutomationManager.cpp">
+      <Filter>정책탭\웹사이트접속관리</Filter>
+    </ClCompile>
+    <ClCompile Include="hookManager.cpp">
+      <Filter>정책탭\정보유출방지\화면캡처차단정책\PrintScreenKey차단기능</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
