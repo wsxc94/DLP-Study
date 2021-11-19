@@ -13,7 +13,7 @@ public:
 	void Encryption();	// 파일 암호화 함수
 	void Decryption();	// 파일 복호화 함수
 	
-	void StartThread() {}	
+	virtual void StartThread() {}	
 	void StartThread(bool check); // 스레드 시작
 
 	static UINT EncryptoThread(LPVOID aParam);	// 암호화 스레드 로직
