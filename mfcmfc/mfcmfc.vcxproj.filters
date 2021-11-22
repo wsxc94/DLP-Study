@@ -103,6 +103,9 @@
     <ClInclude Include="hookManager.h">
       <Filter>정책탭\정보유출방지\화면캡처차단정책\PrintScreenKey차단기능</Filter>
     </ClInclude>
+    <ClInclude Include="injectManager.h">
+      <Filter>정책탭\Manager\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="keeperManager.cpp">
@@ -140,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="hookManager.cpp">
       <Filter>정책탭\정보유출방지\화면캡처차단정책\PrintScreenKey차단기능</Filter>
+    </ClCompile>
+    <ClCompile Include="injectManager.cpp">
+      <Filter>정책탭\Manager\cpp</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

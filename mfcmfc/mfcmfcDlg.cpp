@@ -145,6 +145,13 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	}
 	else {
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
+
+		wstring process_name = L"notepad.exe";
+		wstring dll_name = L"C:\\my_dll.dll";
+
+		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(pid, process_name)) {
+			KEEPER_MANAGER->Get_InjectMng()->dll_injection(pid, dll_name);
+		}
 	}
 
 	AfxMessageBox(szMsg);

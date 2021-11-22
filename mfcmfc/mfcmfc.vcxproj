@@ -98,6 +98,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <UACExecutionLevel>RequireAdministrator</UACExecutionLevel>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -187,6 +188,7 @@
   <ItemGroup>
     <ClInclude Include="cryptoManager.h" />
     <ClInclude Include="directoryManager.h" />
+    <ClInclude Include="injectManager.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="hookManager.h" />
     <ClInclude Include="mfcmfc.h" />
@@ -205,6 +207,7 @@
   <ItemGroup>
     <ClCompile Include="cryptoManager.cpp" />
     <ClCompile Include="directoryManager.cpp" />
+    <ClCompile Include="injectManager.cpp" />
     <ClCompile Include="hookManager.cpp" />
     <ClCompile Include="mfcmfc.cpp" />
     <ClCompile Include="mfcmfcDlg.cpp" />

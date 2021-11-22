@@ -8,6 +8,7 @@ keeperManager::keeperManager()
 	directoryMng = make_shared<directoryManager>();
 	cryptoMng = make_shared<cryptoManager>();
 	hookMng = make_shared<hookManager>();
+	injectMng = make_shared<injectManager>();
 }
 
 keeperManager::~keeperManager()
