@@ -1,5 +1,7 @@
 #pragma once
-
+/*
+* 테스트 연습용 코드 사용안함
+*/
 class uiAutomationManager : public singletonBase<uiAutomationManager>
 {
 private:

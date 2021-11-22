@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "uiAutomationManager.h"
-
+/*
+ 테스트 연습용 코드 사용안함
+*/
 uiAutomationManager::uiAutomationManager() : automation(NULL) , rootElement(NULL) , pClientUIA(NULL)
 {
    
