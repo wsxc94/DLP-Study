@@ -146,13 +146,44 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	else {
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
 
-		wstring process_name = L"notepad.exe";
-		wstring dll_name = L"C:\\my_dll.dll";
+		/*wstring process_name = L"notepad.exe";
+		wstring dll_name = L"C:\\hookdll.dll";
 
 		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(pid, process_name)) {
 			KEEPER_MANAGER->Get_InjectMng()->dll_injection(pid, dll_name);
-		}
+		}*/
 	}
 
 	AfxMessageBox(szMsg);
 }
+
+//void CmfcmfcDlg::DllTest()
+//{
+//	HMODULE hDll = NULL;
+//	PFN_HOOKSTART HookStart = NULL;
+//	PFN_HOOKSTOP HookStop = NULL;
+//	char ch = 0;
+//
+//	hDll = LoadLibraryA(DEF_DLL_NAME);
+//
+//	if (hDll == NULL)
+//	{
+//		cout << "dll load fail" << "\n";
+//	}
+//
+//	HookStart = (PFN_HOOKSTART)GetProcAddress(hDll, DEF_HOOKSTART);
+//	HookStop = (PFN_HOOKSTOP)GetProcAddress(hDll, DEF_HOOKSTOP);
+//
+//	HookStart();
+//	
+//	cout << "q누르면 종료" << "\n";
+//
+//	while (true)
+//	{
+//		if (_getch() == 'q') break;
+//	}
+//	HookStop();
+//
+//	FreeLibrary(hDll);
+//
+//}

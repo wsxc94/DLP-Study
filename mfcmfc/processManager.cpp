@@ -29,9 +29,9 @@ bool processManager::GetProcessModule(DWORD dwPID, string sProcessName)
 	{
 		do
 		{
-			char* tmp = util::ConvertWCtoC(me32.szModule); // 프로세스 키워드 비교를 위한 모듈값 convert
+			char* tmp = ConvertWCtoC(me32.szModule); // 프로세스 키워드 비교를 위한 모듈값 convert
 
-			if (util::compareString(tmp, sProcessName)) // 프로세스 키워드가 같다면 true 반환
+			if (compareString(tmp, sProcessName)) // 프로세스 키워드가 같다면 true 반환
 			{
 				CloseHandle(hModuleSnap);
 				delete[] tmp;

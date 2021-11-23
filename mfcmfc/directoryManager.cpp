@@ -87,19 +87,19 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
     if (bAddFolder == true) strcat_s(buf, MAX_PATH, "*.*");
     else strcat_s(buf, MAX_PATH, pszFilter);
 
-    wchar_t* tmp = util::ConvertCharToWC(buf);
+    wchar_t* tmp = ConvertCharToWC(buf);
     
     cout << tmp << "  " << buf << "\n";
     HANDLE hHandle = FindFirstFile(tmp, &FindFileData);
     
     for (; hHandle != INVALID_HANDLE_VALUE; )
     {
-        if ((FindFileData.cFileName[0] != '.' || strlen(util::ConvertWCtoC(FindFileData.cFileName)) > 2) &&
-            (0 != _stricmp(util::ConvertWCtoC(FindFileData.cFileName), "Replay"))) //  Replay 폴더는 지우지 않는다
+        if ((FindFileData.cFileName[0] != '.' || strlen(ConvertWCtoC(FindFileData.cFileName)) > 2) &&
+            (0 != _stricmp(ConvertWCtoC(FindFileData.cFileName), "Replay"))) //  Replay 폴더는 지우지 않는다
         {
             strcpy_s(buf, MAX_PATH, pszDirectory);
             strcat_s(buf, MAX_PATH, "\\");
-            strcat_s(buf, MAX_PATH, util::ConvertWCtoC(FindFileData.cFileName));
+            strcat_s(buf, MAX_PATH, ConvertWCtoC(FindFileData.cFileName));
 
             if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {

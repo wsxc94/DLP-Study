@@ -26,7 +26,7 @@ protected:
 
 public:
 	afx_msg void OnBnClickedButton1();  // Button1 click event 
-	void checkWebThread();				// 웹사이트 차단 스레드가 실행되어 있는지 체크
+	void DllTest();				// dll test
 	CButton checkbox1;
 	CButton checkbox2;
 	CButton checkbox3;

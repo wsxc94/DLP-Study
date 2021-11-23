@@ -10,11 +10,15 @@ injectManager::~injectManager()
 }
 
 bool injectManager::process_name_to_pid(__out DWORD& pid,__in const std::wstring& process_name) {
+	
+	// 찾을 프로세스 이름을 이용해 스냅샷으로 pid 를 찾으면 true를 리턴한다.
+
 	bool result = false;
 	HANDLE snapshot = nullptr;
 	PROCESSENTRY32 entry = {};
 	entry.dwSize = sizeof(PROCESSENTRY32);
 	snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
+
 	if (snapshot != INVALID_HANDLE_VALUE) {
 		Process32First(snapshot, &entry);
 		do {
@@ -31,7 +35,7 @@ bool injectManager::process_name_to_pid(__out DWORD& pid,__in const std::wstring
 
 bool injectManager::dll_injection(__in DWORD pid, __in const std::wstring& dll_name)
 {
-	cout << "dll injection on" << "\n";
+
 	bool result = false;
 	HANDLE process_handle = nullptr;
 	HANDLE thread_handle = nullptr;
@@ -39,6 +43,7 @@ bool injectManager::dll_injection(__in DWORD pid, __in const std::wstring& dll_n
 	HMODULE module = {};
 	LPTHREAD_START_ROUTINE thread_start_routine = nullptr;
 
+	// 프로세스 id를 이용해 핸들을 얻어온 후 가상 메모리에 엑세스 해준다.
 	do {
 		process_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 		if (process_handle == nullptr) {
@@ -63,7 +68,9 @@ bool injectManager::dll_injection(__in DWORD pid, __in const std::wstring& dll_n
 		)) {
 			break;
 		}
+		// 커널 32 dll 의 모듈핸들을 불러와 프로세스 핸들을 넣어 스레드를 실행한다.
 		module = GetModuleHandle(L"kernel32.dll");
+
 		thread_start_routine = (LPTHREAD_START_ROUTINE)GetProcAddress(module, "LoadLibraryW");
 		thread_handle = CreateRemoteThread(
 			process_handle,
@@ -81,20 +88,6 @@ bool injectManager::dll_injection(__in DWORD pid, __in const std::wstring& dll_n
 	CloseHandle(process_handle);
 	CloseHandle(thread_handle);
 
-	cout << result << "\n";
+	//cout << result << "\n";
 	return result;
-}
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
-{
-	switch (ul_reason_for_call)
-	{
-	case DLL_PROCESS_ATTACH: {
-		MessageBox(nullptr, L"injection success", L"dll injection", MB_OK);
-	}
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH:
-		break;
-	}
-	return TRUE;
 }

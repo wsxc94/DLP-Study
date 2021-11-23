@@ -50,7 +50,8 @@ using namespace std;
 #include <io.h>						// 파일 관련 헤더
 #include <wincrypt.h>				// 암호화 관련 헤더
 #include <fstream>					// 파일 입출력 헤더
-#include <filesystem>				// 파일 시스템 헤더
+#include <filesystem>				// 파일 시스템 헤더'
+#include <conio.h>
 
 /*******************************
 ********* 사용자 헤더 ***********
@@ -58,6 +59,8 @@ using namespace std;
 #include "util.h"					// 전역으로 쓸 유틸 함수들
 #include "keeperManager.h"			// 키퍼 매니저 헤더
 #include "uiAutomationManager.h"	// UI 오토메이션 매니저 헤더
+#include "../UtilFunction/UtilFunctionAPI.h" // DLL API 함수 include
+#pragma comment( lib, "UtilFunction.lib")
 
 /*******************************
 ******* Singleton define *******
