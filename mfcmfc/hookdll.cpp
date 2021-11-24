@@ -10,12 +10,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
 {
 	switch (ul_reason_for_call)
 	{
-	case DLL_PROCESS_ATTACH: {
+	case DLL_PROCESS_ATTACH: { // 메모리에 DLL 로딩시 호출
 		MessageBox(nullptr, L"injection success", L"dll injection", MB_OK);
 	}
-	case DLL_THREAD_ATTACH:
-	case DLL_THREAD_DETACH:
-	case DLL_PROCESS_DETACH:
+	case DLL_THREAD_ATTACH:	   // DLL 사용 프로세스의 새로운 스레드에서 DLL 로딩시
+	case DLL_THREAD_DETACH:	   // DLL 사용 프로세스의 새로운 스레드에서 DLL 해제시
+	case DLL_PROCESS_DETACH:   // 메모리에서 DLL 해제시 호출
 		break;
 	}
 	return TRUE;
@@ -56,3 +56,15 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+
+//int _tmain(int argc, TCHAR* argv[]) {
+//
+//	cout << "실행" << "\n";
+//	wstring process_name = L"notepad.exe";	
+//	wstring dll_name = L"C:\\hookdll.dll";
+//	DWORD pid = 0;
+//
+//		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(pid, process_name)) {
+//			KEEPER_MANAGER->Get_InjectMng()->dll_injection(pid, dll_name);
+//		}
+//}
