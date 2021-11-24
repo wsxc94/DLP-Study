@@ -21,12 +21,8 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-
-	DWORD pid = 0;
-
 public:
 	afx_msg void OnBnClickedButton1();  // Button1 click event 
-	void DllTest();				// dll test
 	CButton checkbox1;
 	CButton checkbox2;
 	CButton checkbox3;

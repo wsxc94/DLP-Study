@@ -146,6 +146,12 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	else {
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
 
+		//CPrintDialog digPrint(FALSE);
+		//if (IDOK == digPrint.DoModal())
+		//{
+		//	// 프린터 정보 얻
+		//}
+
 		/*wstring process_name = L"notepad.exe";
 		wstring dll_name = L"C:\\hookdll.dll";
 
