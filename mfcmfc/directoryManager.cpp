@@ -3,13 +3,36 @@
 
 void directoryManager::FindFileList(string path)
 {
-    WIN32_FIND_DATAA data;
+    BROWSEINFO BrInfo;      // 폴더선택 인터페이스
+    TCHAR szBuffer[512];    // 경로저장 버퍼 
+
+    //메모리 초기화
+    ::ZeroMemory(&BrInfo, sizeof(BROWSEINFO));
+    ::ZeroMemory(szBuffer, 512);
+
+    BrInfo.hwndOwner = NULL; //GetSafeHwnd();
+    BrInfo.lpszTitle = _T("검사할 폴더를 선택하세요");
+    BrInfo.ulFlags = BIF_NEWDIALOGSTYLE | BIF_EDITBOX | BIF_RETURNONLYFSDIRS;
+
+    LPITEMIDLIST pItemIdList = ::SHBrowseForFolder(&BrInfo);    // 폴더 리스트
+    ::SHGetPathFromIDList(pItemIdList, szBuffer);               // 파일경로 읽어오기
+
+    // 경로를 가져와 사용할 경우, Edit Control 에 값 저장
+    CString str;
+    str.Format(_T("%s"), szBuffer);
+
+    path = string(CT2CA(str));
+    path += '\\\\';
+    path += '*';
+
+    WIN32_FIND_DATAA data;  //경로를 통해 디렉토리 데이터 받아올 변수
 
     try
     {
         // 파일 경로로 핸들을 얻어온다
         HANDLE hFind = FindFirstFileA(path.c_str(), &data);
 
+        // 실패시 오류 return
         if (hFind == INVALID_HANDLE_VALUE) throw runtime_error("FindFirstFile 실패");
 
         while (FindNextFileA(hFind , &data))
@@ -29,7 +52,7 @@ void directoryManager::FindFileList(string path)
 
         FindClose(hFind);
 
-        testOutput();       // 테스트 출력
+        testOutput(path);       // 테스트 출력
     }
     catch (runtime_error e)
     {
@@ -118,7 +141,7 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
     SAFE_DELETE_ARRAY(tmp);
 }
 
-void directoryManager::testOutput() // 디렉토리 출력 test 함수
+void directoryManager::testOutput(string path) // 디렉토리 출력 test 함수
 {
     cout << "파일 리스트" << "\n";
     for (string s : fileList) {
@@ -140,9 +163,10 @@ void directoryManager::testOutput() // 디렉토리 출력 test 함수
 
     cout << "c++ 17 filesystem" << "\n";
 
-    string path;
+    path.pop_back();
+
     // dir을 기준으로 디렉토리를 재귀적으로 순회
-    for (auto& p : filesystem::recursive_directory_iterator(dir))
+    for (auto& p : filesystem::recursive_directory_iterator(path))
     {
         path = string(CT2CA(p.path().c_str()));
         size_t pos = path.rfind('\\');
