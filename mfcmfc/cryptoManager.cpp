@@ -11,11 +11,18 @@ cryptoManager::~cryptoManager()
 
 void cryptoManager::Encryption()
 {
-	string path;
-	cout << "암호화 할 파일 경로 입력 : ";
-	cin >> path;
+	CString fileDir = NULL;	// 받을 파일 경로
 
-	savePath = path;	// 원래 경로 따로 저장
+	// 파일 선택 다이얼로그
+	CFileDialog fileDlg(TRUE, NULL, NULL, OFN_EXPLORER | OFN_HIDEREADONLY, L"모든파일(*.*)|*.*||");
+
+	if (IDOK == fileDlg.DoModal()) {
+
+		fileDir = fileDlg.GetPathName();  // 경로 받기
+	}
+
+	// 파일경로 convert CString -> String
+	string path = string(CT2CA(fileDir));
 
 	try
 	{
@@ -35,7 +42,7 @@ void cryptoManager::Encryption()
 		size = fread(ch, sizeof(char), size, p);	//파일 내용을 읽은 뒤 변수 ch에 파일의 내용을 넣는다
 		fclose(p); // p 파일 닫기
 
-		for (int i = 0; i < size; i++) ch[i] ^= cryptoCode;	//암호화 코드를 이용해 암호화
+		for (int i = 0; i < size; i++) ch[i] ^= cryptoCode;	//암호화 코드를 이용해 암호화 XOR 연산
 
 		p = fopen(path.c_str(), "wb"); // 쓰기 형식으로 파일 오픈
 		if (p == NULL) return;
@@ -44,7 +51,7 @@ void cryptoManager::Encryption()
 
 		fclose(p);
 		
-		rename(path.c_str(), "C:\\Users\\User\\Desktop\\암호화된파일");	// 암호화 후 파일이름 변경
+		//rename(path.c_str(), "C:\\Users\\User\\Desktop\\암호화된파일");	// 암호화 후 파일이름 변경
 
 		delete[] ch;
 	}
@@ -55,11 +62,20 @@ void cryptoManager::Encryption()
 	}
 }
 
-void cryptoManager::Decryption()
+void cryptoManager::Decryption() // 암호화랑 로직 똑같음
 {
-	string path;
-	cout << "복호화 할 파일 경로 입력 : ";
-	cin >> path;
+	CString fileDir = NULL;	// 받을 파일 경로
+
+	// 파일 선택 다이얼로그
+	CFileDialog fileDlg(TRUE, NULL, NULL, OFN_EXPLORER | OFN_HIDEREADONLY, L"모든파일(*.*)|*.*||");
+
+	if (IDOK == fileDlg.DoModal()) {
+
+		fileDir = fileDlg.GetPathName();  // 경로 받기
+	}
+
+	// 파일경로 convert CString -> String
+	string path = string(CT2CA(fileDir));
 
 	try
 	{
