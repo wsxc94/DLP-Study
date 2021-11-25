@@ -32,6 +32,8 @@
 #include <afxcmn.h>                     // Windows 공용 컨트롤에 대한 MFC 지원입니다.
 #endif // _AFX_NO_AFXCMN_SUPPORT
 
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console") // 콘솔 창 출력 코드
+
 // 외부 추가 헤더
 #include <Windows.h>
 #include <stdio.h>

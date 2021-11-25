@@ -147,7 +147,8 @@ void CmfcmfcDlg::OnBnClickedButton1()
 
 		wstring process_name = L"notepad.exe";
 		//wstring dll_name = L".\\HookDLL.dll";
-		wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll";
+		//wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 노트북 주소
+		wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
 
 		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), process_name)) {
 			KEEPER_MANAGER->Get_InjectMng()->dll_injection(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), dll_name);

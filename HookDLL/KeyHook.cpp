@@ -1,10 +1,18 @@
 #include "pch.h"
 #include "KeyHook.h"
 
-CWinThread* thread = NULL;
-HHOOK hHook = NULL;
+HHOOK KeyHook::hHook = NULL;
 
-void keyBoardHookLoad()
+KeyHook::KeyHook() : thread(NULL)
+{
+}
+
+
+KeyHook::~KeyHook()
+{
+}
+
+void KeyHook::keyBoardHookLoad()
 {
 	Start_Hook();
 	MSG msg;
@@ -12,31 +20,32 @@ void keyBoardHookLoad()
 	Stop_Hook();
 }
 
-void checkThread()
+void KeyHook::checkThread()
 {
 	StartThread();
 }
 
-void StartThread()
+void KeyHook::StartThread()
 {
 	thread = AfxBeginThread(ThreadUpdata, NULL);
 }
 
-void suspendThread()
+void KeyHook::suspendThread()
 {
 	if (thread != NULL) thread->SuspendThread();
 	Stop_Hook();
 }
 
-UINT ThreadUpdata(LPVOID aParam)
+UINT KeyHook::ThreadUpdata(LPVOID aParam)
 {
-	
-	keyBoardHookLoad();
+	KeyHook* pThis = (KeyHook*)aParam;
+
+	pThis->keyBoardHookLoad();
 
 	return 0;
 }
 
-LRESULT KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
+LRESULT KeyHook::KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 {
 	// 키보드를 눌렀을때 바로 호출
 	if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN)
@@ -47,7 +56,7 @@ LRESULT KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 		if (code >= 0 && (int)wParam == 256)
 		{
 			// lParam이 가리키는 곳에서 키코드를 읽는다.
-			if (pKey->vkCode == ',') return 1; // print screen 키차단
+			if (pKey->vkCode == 'a') return 1; // print screen 키차단
 			std::cout << (char)pKey->vkCode << "\n";
 		}
 	}
@@ -57,7 +66,7 @@ LRESULT KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-void Start_Hook()
+void KeyHook::Start_Hook()
 {
 	// 현재 모듈의 핸들을 가져와 hook을 셋팅한다.
 	HMODULE hInstance = GetModuleHandle(NULL);
@@ -67,7 +76,7 @@ void Start_Hook()
 
 }
 
-void Stop_Hook()
+void KeyHook::Stop_Hook()
 {
 	if (hHook)
 	{
