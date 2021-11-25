@@ -8,6 +8,8 @@
 #include "mfcmfcDlg.h"
 #include "afxdialogex.h"
 
+#define DEF_DLL_PATH _T("c:\\HookDLL.dll")
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -140,8 +142,19 @@ void CmfcmfcDlg::OnBnClickedButton1()
 
 	if (checkbox6.GetCheck() == BST_CHECKED)	// 체크박스 6 키차단 체크여부
 	{
-		// 키보드 후크 로드
-		KEEPER_MANAGER->Get_HookMng()->checkThread();
+		// 키보드 HOOK 스레드 로드
+		//KEEPER_MANAGER->Get_HookMng()->checkThread();
+
+		wstring process_name = L"notepad.exe";
+		wstring dll_name = L".\\HookDLL.dll";
+		TCHAR szDllPath[MAX_PATH] = _T("C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll");
+
+		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), process_name)) {
+			//KEEPER_MANAGER->Get_InjectMng()->dll_injection(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), dll_name);
+			cout << KEEPER_MANAGER->Get_InjectMng()->Get_Pid() << "\n";
+			//KEEPER_MANAGER->Get_InjectMng()->DLLInject(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), _T("c:\\HookDLL.dll"));
+			KEEPER_MANAGER->Get_InjectMng()->DLLInject(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), DEF_DLL_PATH);
+		}
 	}
 	else {
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
@@ -151,13 +164,6 @@ void CmfcmfcDlg::OnBnClickedButton1()
 		//{
 		//	// 프린터 정보 얻
 		//}
-
-		/*wstring process_name = L"notepad.exe";
-		wstring dll_name = L"C:\\hookdll.dll";
-
-		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(pid, process_name)) {
-			KEEPER_MANAGER->Get_InjectMng()->dll_injection(pid, dll_name);
-		}*/
 	}
 
 	AfxMessageBox(szMsg);

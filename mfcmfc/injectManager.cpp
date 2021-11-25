@@ -91,3 +91,36 @@ bool injectManager::dll_injection(__in DWORD pid, __in const std::wstring& dll_n
 	//cout << result << "\n";
 	return result;
 }
+
+BOOL injectManager::DLLInject(DWORD dwPID, LPCTSTR lpDllName)
+{
+	HANDLE hProcess, hThread;
+	HMODULE hMod;
+	LPVOID pRemoteBuf;
+	DWORD dwBufSize = lstrlen(lpDllName) + 1;
+	LPTHREAD_START_ROUTINE pThreadProc;
+
+	// dwPID 를 이용하여 대상 프로세스(exe)의 HANDLE을 구함
+	if (!(hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, dwPID)))
+		return FALSE;
+
+	// 대상 프로세스(notepad.exe) 메모리에 szDllName 크기만큼 메모리를 할당
+	pRemoteBuf = VirtualAllocEx(hProcess, NULL, dwBufSize, MEM_COMMIT, PAGE_READWRITE);
+
+	// 할당 받은 메모리에 dll 경로("c:\\???.dll")를 씀
+	WriteProcessMemory(hProcess, pRemoteBuf, (LPVOID)lpDllName, dwBufSize, NULL);
+
+	// LoadLibraryA() API 주소를 구함
+	hMod = GetModuleHandle(_T("kernel32.dll"));
+	pThreadProc = (LPTHREAD_START_ROUTINE)GetProcAddress(hMod, "LoadLibraryA");
+
+	// exe 프로세스에 스레드를 실행
+	hThread = CreateRemoteThread(hProcess, NULL, 0, pThreadProc, pRemoteBuf, 0, NULL);
+	WaitForSingleObject(hThread, INFINITE);
+
+	CloseHandle(hThread);
+	CloseHandle(hProcess);
+
+	cout << "완료" << "\n";
+	return TRUE;
+}
