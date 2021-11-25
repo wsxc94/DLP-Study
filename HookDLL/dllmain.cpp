@@ -5,6 +5,7 @@
 #include "framework.h"
 #include <afxwin.h>
 #include <afxdllx.h>
+#include "KeyHook.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -14,8 +15,7 @@ static AFX_EXTENSION_MODULE HookDLLDLL = { false, nullptr };
 
 extern "C" int APIENTRY
 DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
-{
-		
+{	
 	//AfxMessageBox(_T("HOOK DLL LOAD"));
 	//
 	//// lpReserved를 사용하는 경우 다음을 제거하십시오.
@@ -53,17 +53,34 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 	//}
 	//return 1;   // 확인
 		
-	
-
 	switch (dwReason)
 	{
 	case DLL_PROCESS_ATTACH: { // 메모리에 DLL 로딩시 호출
 		MessageBox(nullptr, L"injection success", L"dll injection", MB_OK);
-	}
-	case DLL_THREAD_ATTACH:	   // DLL 사용 프로세스의 새로운 스레드에서 DLL 로딩시
-	case DLL_THREAD_DETACH:	   // DLL 사용 프로세스의 새로운 스레드에서 DLL 해제시
-	case DLL_PROCESS_DETACH:   // 메모리에서 DLL 해제시 호출
+		//keyBoardHookLoad();
+		//checkThread();
 		break;
 	}
+	case DLL_THREAD_ATTACH:	   // DLL 사용 프로세스의 새로운 스레드에서 DLL 로딩시
+		//MessageBox(nullptr, L"thread attach", L"dll injection", MB_OK);
+		break;
+	case DLL_THREAD_DETACH:	   // DLL 사용 프로세스의 새로운 스레드에서 DLL 해제시
+		//MessageBox(nullptr, L"thread detach", L"dll injection", MB_OK);
+		break;
+	case DLL_PROCESS_DETACH: {  // 메모리에서 DLL 해제시 호출
+		MessageBox(nullptr, L"dll exit", L"dll injection", MB_OK);
+		suspendThread();
+		break;
+	}
+	}
+	//checkThread();
 	return TRUE;
+}
+__declspec (dllexport)
+int
+__cdecl main(int argc, char* argv[])
+{
+	std::cout << "HOOK DLL CALL" << "\n";
+	checkThread();
+	return 0;
 }

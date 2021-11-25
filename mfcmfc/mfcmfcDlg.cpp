@@ -8,7 +8,7 @@
 #include "mfcmfcDlg.h"
 #include "afxdialogex.h"
 
-#define DEF_DLL_PATH _T("c:\\HookDLL.dll")
+#define DEF_DLL_PATH _T("HookDLL.dll")
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -146,14 +146,11 @@ void CmfcmfcDlg::OnBnClickedButton1()
 		//KEEPER_MANAGER->Get_HookMng()->checkThread();
 
 		wstring process_name = L"notepad.exe";
-		wstring dll_name = L".\\HookDLL.dll";
-		TCHAR szDllPath[MAX_PATH] = _T("C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll");
+		//wstring dll_name = L".\\HookDLL.dll";
+		wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll";
 
 		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), process_name)) {
-			//KEEPER_MANAGER->Get_InjectMng()->dll_injection(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), dll_name);
-			cout << KEEPER_MANAGER->Get_InjectMng()->Get_Pid() << "\n";
-			//KEEPER_MANAGER->Get_InjectMng()->DLLInject(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), _T("c:\\HookDLL.dll"));
-			KEEPER_MANAGER->Get_InjectMng()->DLLInject(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), DEF_DLL_PATH);
+			KEEPER_MANAGER->Get_InjectMng()->dll_injection(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), dll_name);
 		}
 	}
 	else {

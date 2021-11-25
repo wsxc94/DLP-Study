@@ -61,6 +61,7 @@ using namespace std;
 #include "uiAutomationManager.h"	// UI 오토메이션 매니저 헤더
 #include "../UtilFunction/UtilFunctionAPI.h" // DLL API 함수 include
 #pragma comment( lib, "UtilFunction.lib")
+//#pragma comment( lib, "HookDLL.lib")
 
 /*******************************
 ******* Singleton define *******

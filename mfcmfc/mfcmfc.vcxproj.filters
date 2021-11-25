@@ -147,9 +147,6 @@
     <ClCompile Include="injectManager.cpp">
       <Filter>정책탭\Manager\cpp</Filter>
     </ClCompile>
-    <ClCompile Include="hookdll.cpp">
-      <Filter>정책탭\정보유출방지\화면캡처차단정책\PrintScreenKey차단기능</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="mfcmfc.rc">

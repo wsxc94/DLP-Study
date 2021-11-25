@@ -37,3 +37,4 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <Psapi.h>	// API 사용
+#include <iostream>

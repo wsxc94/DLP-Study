@@ -76,6 +76,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <LibraryPath>$(SolutionDir)$(IntDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -208,7 +209,6 @@
   <ItemGroup>
     <ClCompile Include="cryptoManager.cpp" />
     <ClCompile Include="directoryManager.cpp" />
-    <ClCompile Include="hookdll.cpp" />
     <ClCompile Include="injectManager.cpp" />
     <ClCompile Include="hookManager.cpp" />
     <ClCompile Include="mfcmfc.cpp" />
