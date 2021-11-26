@@ -1,26 +1,26 @@
 ﻿// dllmain.cpp : DLL의 초기화 루틴을 정의합니다.
 //
-
 #include "pch.h"
 #include "framework.h"
 #include <afxwin.h>
 #include <afxdllx.h>
-#include "KeyHook.h"
+#include "UrlHook.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-//static AFX_EXTENSION_MODULE HookDLLDLL = { false, nullptr };
-KeyHook* keyhook;
+static AFX_EXTENSION_MODULE HookDLLDLL = { false, nullptr };
 
+std::unique_ptr<UrlHook> urlhook;
 DWORD WINAPI ThreadProc(LPVOID IParam) {
-
-	MessageBox(nullptr, L"thread", L"thread", MB_OK);
+	//int cnt = 0;
 	while (true)
-	{	
+	{
+		//if (cnt > 5) break;
 		Sleep(500);
-		keyhook->keyBoardHookLoad();
+		urlhook->WidgetLoad();
+		//cnt++;
 	}
 
 	return 0;
@@ -29,8 +29,6 @@ DWORD WINAPI ThreadProc(LPVOID IParam) {
 extern "C" int APIENTRY
 DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 {	
-
-	keyhook = new KeyHook;
 	
 	HANDLE hThread = NULL;
 
@@ -38,7 +36,6 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 	{
 	case DLL_PROCESS_ATTACH: { // 메모리에 DLL 로딩시 호출
 		MessageBox(nullptr, L"injection success", L"dll injection", MB_OK);
-		//keyhook->checkThread();
 		hThread = CreateThread(NULL, 0, ThreadProc, NULL, 0, NULL);
 		CloseHandle(hThread);
 		break;
@@ -50,13 +47,11 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 		//MessageBox(nullptr, L"thread detach", L"dll injection", MB_OK);
 		break;
 	case DLL_PROCESS_DETACH: {  // 메모리에서 DLL 해제시 호출
+		TRACE("DLL 프로세스 종료");
 		MessageBox(nullptr, L"dll exit", L"dll injection", MB_OK);
-		//keyhook->suspendThread();
 		SuspendThread(hThread);
-		delete keyhook;
 		break;
 	}
 	}
-	//checkThread();
 	return TRUE;
 }

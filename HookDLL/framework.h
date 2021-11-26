@@ -40,3 +40,8 @@
 #include <tchar.h>
 #include <Psapi.h>	// API 사용
 #include <iostream>
+#include <memory>
+#include <vector>
+#include <UIAutomation.h>
+#include <UIAutomationClient.h>
+#include "util.h"

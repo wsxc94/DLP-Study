@@ -103,6 +103,7 @@ UINT processManager::ThreadUpdata(LPVOID aParam)
 	{
 		Sleep(500);
 		pThis->ProcessLoad();
+		TRACE("process thread call");
 	}
 
 	return 0;

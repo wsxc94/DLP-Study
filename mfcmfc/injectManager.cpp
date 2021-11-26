@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "injectManager.h"
 
-injectManager::injectManager()
+injectManager::injectManager() : pid(NULL)
 {
 }
 
@@ -9,7 +9,7 @@ injectManager::~injectManager()
 {
 }
 
-bool injectManager::process_name_to_pid(__out DWORD& pid,__in const wstring& process_name) {
+bool injectManager::Process_name_to_pid(const wstring& process_name) {
 	
 	// 찾을 프로세스 이름을 이용해 스냅샷으로 pid 를 찾으면 true를 리턴한다.
 
@@ -37,20 +37,23 @@ bool injectManager::process_name_to_pid(__out DWORD& pid,__in const wstring& pro
 	return result;
 }
 
-bool injectManager::dll_injection(__in DWORD& pid, __in const wstring& dll_name)
+bool injectManager::Dll_injection(const wstring& dll_name)
 {
     bool result = false;
-    HANDLE process_handle = nullptr;
-    HANDLE thread_handle = nullptr;
-    LPVOID remote_buffer = nullptr;
+    HANDLE process_handle = nullptr;    // 프로세스 핸들
+    HANDLE thread_handle = nullptr;     // 스레드 핸들
+    LPVOID remote_buffer = nullptr;     // 가상 버퍼 메모리
     HMODULE module = {};
     LPTHREAD_START_ROUTINE thread_start_routine = nullptr;
+
     do {
-        process_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
         //해당 PID를 가진 프로세스를 열어 핸들을 가져온다
+        process_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
+
         if (process_handle == nullptr) {
             break;
         }
+        //해당 프로세스의 가상 메모리 공간에 메모리를 할당함. 
         remote_buffer = VirtualAllocEx(
             process_handle,
             nullptr,
@@ -58,7 +61,7 @@ bool injectManager::dll_injection(__in DWORD& pid, __in const wstring& dll_name)
             MEM_COMMIT,
             PAGE_READWRITE
         );
-        //해당 프로세스의 가상 메모리 공간에 메모리를 할당함. 
+
         if (!remote_buffer) {
             break;
         }
@@ -73,8 +76,10 @@ bool injectManager::dll_injection(__in DWORD& pid, __in const wstring& dll_name)
         }
         // remote_buffer에 담긴 할당된 메모리 공간에 로드될 DLL의 경로 스트링을 wrtie 한다. 
         module = GetModuleHandle(L"kernel32.dll");
+
         //kernel32.dll 모듈의 핸들을 가져옴
         thread_start_routine = (LPTHREAD_START_ROUTINE)GetProcAddress(module, "LoadLibraryW");
+
         //모듈에 담긴 Kernel32.dll 내의 LoadLibrary함수 포인터를 가져와 저장한다. 
         thread_handle = CreateRemoteThread(
             process_handle,
@@ -85,14 +90,18 @@ bool injectManager::dll_injection(__in DWORD& pid, __in const wstring& dll_name)
             0,
             nullptr
         );
+
         //LoadLibrary 함수와 원형이 같은 CreateRemoteThread함수를 이용하여 Thread를 실행하는것 처럼 해당 함수를 실행함.
         //이때 remote_buffer 메모리 공간에는 지정했던 dll의 경로 문자열이 담겨있다.
         //따라서 LoadLibrary 함수를 통해 내가 지정한 dll을 load할 수 있게 되는것. 
         WaitForSingleObject(thread_handle, INFINITE);
         result = true;
+
     } while (false);
+
     CloseHandle(process_handle);
     CloseHandle(thread_handle);
+
     return result;
 }
 

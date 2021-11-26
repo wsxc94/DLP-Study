@@ -8,8 +8,6 @@
 #include "mfcmfcDlg.h"
 #include "afxdialogex.h"
 
-#define DEF_DLL_PATH _T("HookDLL.dll")
-
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -115,11 +113,19 @@ void CmfcmfcDlg::OnBnClickedButton1()
 
 	if (checkbox2.GetCheck() == BST_CHECKED) // 체크박스2 체크여부 웹사이트 차단
 	{
+		wstring process_name = L"chrome.exe";
+		//wstring dll_name = L".\\HookDLL.dll";
+		//wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 노트북 주소
+		wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
 
-		KEEPER_MANAGER->Get_WebsiteMng()->checkThread();	// 웹사이트 감시 스레드 실행상태 체크
+		if (KEEPER_MANAGER->Get_InjectMng()->Process_name_to_pid(process_name)) {
+			KEEPER_MANAGER->Get_InjectMng()->Dll_injection(dll_name);
+		}
+
+		//KEEPER_MANAGER->Get_WebsiteMng()->checkThread();	// 웹사이트 감시 스레드 실행상태 체크
 	}
 	else {
-		KEEPER_MANAGER->Get_WebsiteMng()->suspendThread();	// 스레드 멈춤
+		//KEEPER_MANAGER->Get_WebsiteMng()->suspendThread();	// 스레드 멈춤
 	}
 
 	if (checkbox3.GetCheck() == BST_CHECKED) // 체크박스3 체크여부 검사
@@ -143,16 +149,7 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	if (checkbox6.GetCheck() == BST_CHECKED)	// 체크박스 6 키차단 체크여부
 	{
 		// 키보드 HOOK 스레드 로드
-		//KEEPER_MANAGER->Get_HookMng()->checkThread();
-
-		wstring process_name = L"notepad.exe";
-		//wstring dll_name = L".\\HookDLL.dll";
-		//wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 노트북 주소
-		wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
-
-		if (KEEPER_MANAGER->Get_InjectMng()->process_name_to_pid(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), process_name)) {
-			KEEPER_MANAGER->Get_InjectMng()->dll_injection(KEEPER_MANAGER->Get_InjectMng()->Get_Pid(), dll_name);
-		}
+		KEEPER_MANAGER->Get_HookMng()->checkThread();
 	}
 	else {
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
