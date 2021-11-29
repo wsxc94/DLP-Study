@@ -4,7 +4,7 @@
 class UrlHook
 {
 private:
-	std::vector<std::string> urlBlockList;	// 차단할 웹사이트 name list
+	vector<string> urlBlockList;	// 차단할 웹사이트 name list
 public:
 	UrlHook();
 	~UrlHook();

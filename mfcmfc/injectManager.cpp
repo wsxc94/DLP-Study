@@ -62,6 +62,7 @@ bool injectManager::Dll_injection(const wstring& dll_name)
             PAGE_READWRITE
         );
 
+        // remote_buffer에 담긴 할당된 메모리 공간에 로드될 DLL의 경로 스트링을 wrtie 한다.
         if (!remote_buffer) {
             break;
         }
@@ -74,13 +75,16 @@ bool injectManager::Dll_injection(const wstring& dll_name)
             ) {
             break;
         }
-        // remote_buffer에 담긴 할당된 메모리 공간에 로드될 DLL의 경로 스트링을 wrtie 한다. 
+
+        //kernel32.dll 모듈의 핸들을 가져옴 
         module = GetModuleHandle(L"kernel32.dll");
 
-        //kernel32.dll 모듈의 핸들을 가져옴
+        //모듈에 담긴 Kernel32.dll 내의 LoadLibrary함수 포인터를 가져와 저장한다.
         thread_start_routine = (LPTHREAD_START_ROUTINE)GetProcAddress(module, "LoadLibraryW");
 
-        //모듈에 담긴 Kernel32.dll 내의 LoadLibrary함수 포인터를 가져와 저장한다. 
+        //LoadLibrary 함수와 원형이 같은 CreateRemoteThread함수를 이용하여 Thread를 실행하는것 처럼 해당 함수를 실행함.
+        //이때 remote_buffer 메모리 공간에는 지정했던 dll의 경로 문자열이 담겨있다.
+        //따라서 LoadLibrary 함수를 통해 내가 지정한 dll을 load할 수 있게 되는것.
         thread_handle = CreateRemoteThread(
             process_handle,
             nullptr,
@@ -91,9 +95,7 @@ bool injectManager::Dll_injection(const wstring& dll_name)
             nullptr
         );
 
-        //LoadLibrary 함수와 원형이 같은 CreateRemoteThread함수를 이용하여 Thread를 실행하는것 처럼 해당 함수를 실행함.
-        //이때 remote_buffer 메모리 공간에는 지정했던 dll의 경로 문자열이 담겨있다.
-        //따라서 LoadLibrary 함수를 통해 내가 지정한 dll을 load할 수 있게 되는것. 
+         
         WaitForSingleObject(thread_handle, INFINITE);
         result = true;
 

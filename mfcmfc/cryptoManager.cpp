@@ -1,6 +1,14 @@
 #include "pch.h"
 #include "cryptoManager.h"
 
+#include <openssl/conf.h>
+#include <openssl/hmac.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
+
+#define OUR_SALT "fileenc_oursalt"
+#define ITER 4096
+
 cryptoManager::cryptoManager() : cryptoCode(25)
 {
 }
@@ -114,6 +122,168 @@ void cryptoManager::Decryption() // 암호화랑 로직 똑같음
 	}
 }
 
+void cryptoManager::OpenSSL(bool check)
+{
+	
+	CFileDialog fdlg(TRUE);
+	if (fdlg.DoModal() == IDOK)
+	{
+		m_strOrgFile = fdlg.GetPathName();
+		CString OrgFileName = fdlg.GetFileName();
+		CString OnlyFileName = OrgFileName.Left(OrgFileName.ReverseFind('.'));
+		CString OrgFilePath = m_strOrgFile.Left(m_strOrgFile.ReverseFind('\\') + 1);
+
+		m_strTargetFile = OrgFilePath + OnlyFileName + "_result." + fdlg.GetFileExt();
+
+		// TargetFile은 OrgFileName에 _result를 추가함.
+		//TRACE(m_strOrgFile + "\n");
+		//TRACE(m_strTargetFile + "\n");
+	}
+
+	cout << "암호 입력 : ";
+	cin >> m_strPassword;
+
+	try
+	{
+		// 파일 로딩
+		CFile file;
+		if (file.Open(m_strOrgFile, CFile::modeRead | CFile::typeBinary, NULL) == FALSE) throw runtime_error("파일 읽기 실패");
+
+		// 원본 파일의 길이와 읽어올 버퍼를 만든다
+		int fileLen = file.GetLength();
+		char* fileBuf = new char[fileLen];
+		file.Read(fileBuf, fileLen);
+		file.Close();
+
+		// 아웃 버퍼 초기화
+		char* outBuf = new char[fileLen + 256];
+		memset(outBuf, 0x00, fileLen + 256);
+		int outLen = 0;
+
+		// check 
+		// true 암호화
+		// false 복호화
+		if (check) {
+			if (FileEncrypt((const unsigned char*)fileBuf, fileLen, (unsigned char*)outBuf, &outLen) == FALSE)
+			{
+				throw runtime_error("파일 암호화 중 에러 발생!");
+			}
+		}
+		else {
+			if (FileDecrypt((const unsigned char*)fileBuf, fileLen, (unsigned char*)outBuf, &outLen) == FALSE)
+			{
+				throw runtime_error("파일 복호화 중 에러 발생!");
+			}
+		}
+
+		// 결과 파일 쓰기
+		if (file.Open(m_strTargetFile, CFile::modeWrite | CFile::modeCreate) == FALSE)
+		{
+			throw runtime_error("암호화 파일쓰기 실패");
+		}
+
+		file.Write(outBuf, outLen);
+		file.Close();
+
+		delete[] fileBuf;
+		delete[] outBuf;
+
+		AfxMessageBox(_T("파일 암/복호화에 성공했습니다."));
+	}
+	catch (runtime_error e)
+	{
+		cerr << e.what() << "\n";
+		return;
+	}
+}
+
+BOOL cryptoManager::FileEncrypt(const unsigned char* orgBuf, int orgLen, unsigned char* descBuf, int* descLen)
+{
+	CString cs(m_strPassword.c_str());
+	//const char* c = m_strPassword.c_str();
+
+	//Key, IV 만들기
+	unsigned char* keyiv = new unsigned char[32];
+	int ret = PKCS5_PBKDF2_HMAC_SHA1(/*cs.GetBuffer(0) */ m_strPassword.c_str(), cs.GetLength(), (unsigned char*)OUR_SALT, strlen(OUR_SALT), ITER, 32, keyiv);
+
+	int len = 0;
+
+	//암호화
+	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+	EVP_CIPHER_CTX_init(ctx);
+
+	if (1 != EVP_EncryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, &keyiv[0], &keyiv[16]))
+	{
+		//OpenErrLog();
+		EVP_CIPHER_CTX_free(ctx);
+		return FALSE;
+	}
+
+	if (1 != EVP_EncryptUpdate(ctx, descBuf, &len, orgBuf, orgLen))
+	{
+		//OpenErrLog();
+		EVP_CIPHER_CTX_free(ctx);
+		return FALSE;
+	}
+	*descLen = len;
+
+	if (1 != EVP_EncryptFinal_ex(ctx, descBuf + len, &len))
+	{
+		//OpenErrLog();
+		EVP_CIPHER_CTX_free(ctx);
+		return FALSE;
+	}
+	*descLen += len;
+
+	EVP_CIPHER_CTX_free(ctx);
+	delete[] keyiv;
+
+	return TRUE;
+}
+
+BOOL cryptoManager::FileDecrypt(const unsigned char* orgBuf, int orgLen, unsigned char* descBuf, int* descLen)
+{
+	CString cs(m_strPassword.c_str());
+
+	//Key, IV 만들기
+	unsigned char* keyiv = new unsigned char[48];
+	int ret = PKCS5_PBKDF2_HMAC_SHA1(m_strPassword.c_str(), cs.GetLength(), (unsigned char*)OUR_SALT, strlen(OUR_SALT), ITER, 32, keyiv);
+
+	int len = 0;
+
+	//암호화
+	EVP_CIPHER_CTX* ctx = EVP_CIPHER_CTX_new();
+	EVP_CIPHER_CTX_init(ctx);
+
+	if (1 != EVP_DecryptInit_ex(ctx, EVP_aes_128_cbc(), NULL, &keyiv[0], &keyiv[16]))
+	{
+		//OpenErrLog();
+		EVP_CIPHER_CTX_free(ctx);
+		return FALSE;
+	}
+
+	if (1 != EVP_DecryptUpdate(ctx, descBuf, &len, orgBuf, orgLen))
+	{
+		//OpenErrLog();
+		EVP_CIPHER_CTX_free(ctx);
+		return FALSE;
+	}
+	*descLen = len;
+
+	if (1 != EVP_DecryptFinal_ex(ctx, descBuf + len, &len))
+	{
+		//OpenErrLog();
+		EVP_CIPHER_CTX_free(ctx);
+		return FALSE;
+	}
+	*descLen += len;
+
+	EVP_CIPHER_CTX_free(ctx);
+	delete[] keyiv;
+
+	return TRUE;
+}
+
 void cryptoManager::StartThread(bool check)
 {
 	/**********************************
@@ -129,7 +299,8 @@ void cryptoManager::StartThread(bool check)
 UINT cryptoManager::EncryptoThread(LPVOID aParam)
 {
 	cryptoManager* pThis = (cryptoManager*)aParam;
-	pThis->Encryption();
+	//pThis->Encryption();
+	pThis->OpenSSL(true);
 
 	return 0;
 }
@@ -137,7 +308,8 @@ UINT cryptoManager::EncryptoThread(LPVOID aParam)
 UINT cryptoManager::DecryptoThread(LPVOID aParam)
 {
 	cryptoManager* pThis = (cryptoManager*)aParam;
-	pThis->Decryption();
+	//pThis->Decryption();
+	pThis->OpenSSL(false);
 
 	return 0;
 }

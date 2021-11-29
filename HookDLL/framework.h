@@ -44,4 +44,9 @@
 #include <vector>
 #include <UIAutomation.h>
 #include <UIAutomationClient.h>
-#include "util.h"
+#include <comutil.h>
+#include <algorithm>
+#include <string>
+
+using namespace std;
+#pragma comment(lib,"comsuppw.lib")

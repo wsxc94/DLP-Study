@@ -113,10 +113,10 @@ void CmfcmfcDlg::OnBnClickedButton1()
 
 	if (checkbox2.GetCheck() == BST_CHECKED) // 체크박스2 체크여부 웹사이트 차단
 	{
-		wstring process_name = L"chrome.exe";
-		//wstring dll_name = L".\\HookDLL.dll";
-		//wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 노트북 주소
-		wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
+		//wstring process_name = L"chrome.exe";
+		wstring process_name = L"msedge.exe";
+		wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 노트북 주소
+		//wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
 
 		if (KEEPER_MANAGER->Get_InjectMng()->Process_name_to_pid(process_name)) {
 			KEEPER_MANAGER->Get_InjectMng()->Dll_injection(dll_name);
@@ -163,34 +163,3 @@ void CmfcmfcDlg::OnBnClickedButton1()
 
 	AfxMessageBox(szMsg);
 }
-
-//void CmfcmfcDlg::DllTest()
-//{
-//	HMODULE hDll = NULL;
-//	PFN_HOOKSTART HookStart = NULL;
-//	PFN_HOOKSTOP HookStop = NULL;
-//	char ch = 0;
-//
-//	hDll = LoadLibraryA(DEF_DLL_NAME);
-//
-//	if (hDll == NULL)
-//	{
-//		cout << "dll load fail" << "\n";
-//	}
-//
-//	HookStart = (PFN_HOOKSTART)GetProcAddress(hDll, DEF_HOOKSTART);
-//	HookStop = (PFN_HOOKSTOP)GetProcAddress(hDll, DEF_HOOKSTOP);
-//
-//	HookStart();
-//	
-//	cout << "q누르면 종료" << "\n";
-//
-//	while (true)
-//	{
-//		if (_getch() == 'q') break;
-//	}
-//	HookStop();
-//
-//	FreeLibrary(hDll);
-//
-//}

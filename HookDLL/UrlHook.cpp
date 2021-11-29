@@ -54,23 +54,22 @@ void UrlHook::FindWindowWidget()
 		edit->GetCurrentPatternAs(UIA_ValuePatternId, IID_PPV_ARGS(&value));
 		BSTR bs;
 		value->get_CurrentValue(&bs);
+		string current_site = _com_util::ConvertBSTRToString(bs);
 
-		USES_CONVERSION;
-		std::string current_site = W2A(bs);
-
-		TRACE(current_site.c_str()); //현재 사이트 디버그용
+		TRACE(current_site.c_str());
 		
-		BSTR url = _T("www.google.com");
+		//std::cout << current_site << "\n"; //현재 사이트 디버그용
 
-		// 웹 차단 리스트 순회
-		for (std::string s : urlBlockList) {
-			if (current_site.find(s) != std::string::npos) {
-				value->SetValue(url); // url value 값 수정
-				//SetForegroundWindow(hwnd);
+		 //웹 차단 리스트 순회
+		for (string s : urlBlockList) {
+			if (current_site.find(s) != string::npos) {
+				value->SetValue(_com_util::ConvertStringToBSTR("www.google.com")); // url value 값 수정
+				SetForegroundWindow(hwnd);
 				PostMessage(hwnd, WM_KEYDOWN, VK_RETURN, 0); // enter 이벤트
 				AfxMessageBox(_T("웹사이트 차단"));
 			}
 		}
+
 		break;
 	}
 	CoUninitialize();
