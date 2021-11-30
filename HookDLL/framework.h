@@ -47,6 +47,5 @@
 #include <comutil.h>
 #include <algorithm>
 #include <string>
-
-using namespace std;
 #pragma comment(lib,"comsuppw.lib")
+using namespace std;

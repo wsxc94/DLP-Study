@@ -3,7 +3,7 @@
 class Thread
 {
 protected:
-	CWinThread* thread;
+	CWinThread* thread;	// 스레드 변수
 public:
 	Thread();
 	virtual ~Thread();

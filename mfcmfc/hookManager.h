@@ -21,7 +21,5 @@ public:
 
 	static UINT ThreadUpdata(LPVOID aParam);	// 키보드 hook 스레드 로직
 	static LRESULT CALLBACK KeyboardProc(int code, WPARAM wParam, LPARAM lParam);	// 키보드 hook 콜백
-
-	//HHOOK Get_Hook() { return hHook; }
 };
 

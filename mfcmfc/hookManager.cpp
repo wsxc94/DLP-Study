@@ -29,7 +29,7 @@ void hookManager::StartThread()
 	hookManager* param = new hookManager;
 	param = this;
 
-	thread = AfxBeginThread(ThreadUpdata, param);
+	thread = AfxBeginThread(ThreadUpdata, param);	// 스레드 실행
 }
 
 void hookManager::suspendThread()
@@ -53,16 +53,17 @@ LRESULT hookManager::KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 	{
 		PKBDLLHOOKSTRUCT pKey = (PKBDLLHOOKSTRUCT)lParam;
 
-		// code가 0보다 클때만 처리해야하며 wParam = 256는 키보드를 누르는 이벤트와 떼는 이벤트중 누르는 이벤트만 통과
+		// code가 0보다 클때만 처리해야하며 
+		// wParam = 256는 키보드를 누르는 이벤트와 떼는 이벤트중 누르는 이벤트만 통과
 		if (code >= 0 && (int)wParam == 256)
 		{
 			// lParam이 가리키는 곳에서 키코드를 읽는다.
 			if (pKey->vkCode == ',') return 1; // print screen 키차단
-			cout << (char)pKey->vkCode << "\n";
+			cout << (char)pKey->vkCode << "\n";	// keyCode 출력 확인용
 		}
 	}
-
-	CallNextHookEx(hHook, code, wParam, lParam);	//다음 후크로 넘어감
+	
+	CallNextHookEx(hHook, code, wParam, lParam);	//다음 HOOK으로 넘어감
 
 	return 0;
 }
@@ -81,7 +82,7 @@ void hookManager::Stop_Hook()
 {
 	if (hHook)
 	{	
-		UnhookWindowsHookEx(hHook);	// 윈도우 후크를 종료
+		UnhookWindowsHookEx(hHook);	// 윈도우 hooking 종료
 		hHook = NULL;
 	}
 }

@@ -64,9 +64,6 @@
     <ClInclude Include="singletonBase.h">
       <Filter>Util\header</Filter>
     </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>Util\header</Filter>
-    </ClInclude>
     <ClInclude Include="mfcmfc.h">
       <Filter>Main\header</Filter>
     </ClInclude>
@@ -110,9 +107,6 @@
   <ItemGroup>
     <ClCompile Include="keeperManager.cpp">
       <Filter>정책탭\Manager\cpp</Filter>
-    </ClCompile>
-    <ClCompile Include="util.cpp">
-      <Filter>Util\cpp</Filter>
     </ClCompile>
     <ClCompile Include="mfcmfc.cpp">
       <Filter>Main\cpp</Filter>

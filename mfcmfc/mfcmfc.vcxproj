@@ -205,7 +205,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Thread.h" />
     <ClInclude Include="uiAutomationManager.h" />
-    <ClInclude Include="util.h" />
     <ClInclude Include="websiteManager.h" />
   </ItemGroup>
   <ItemGroup>
@@ -225,7 +224,6 @@
     <ClCompile Include="processManager.cpp" />
     <ClCompile Include="Thread.cpp" />
     <ClCompile Include="uiAutomationManager.cpp" />
-    <ClCompile Include="util.cpp" />
     <ClCompile Include="websiteManager.cpp" />
   </ItemGroup>
   <ItemGroup>

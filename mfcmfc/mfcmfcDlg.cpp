@@ -98,11 +98,6 @@ HCURSOR CmfcmfcDlg::OnQueryDragIcon()
 
 void CmfcmfcDlg::OnBnClickedButton1()
 {
-	CString szMsg;
-
-	szMsg.Append(_T("\n업데이트 적용"));
-	
-	
 	if (checkbox1.GetCheck() == BST_CHECKED) // 체크박스1 체크여부 소프트웨어 차단
 	{
 		KEEPER_MANAGER->Get_ProcessMng()->checkThread();	// 소프트웨어 감시 스레드 실행상태 체크
@@ -152,14 +147,9 @@ void CmfcmfcDlg::OnBnClickedButton1()
 		KEEPER_MANAGER->Get_HookMng()->checkThread();
 	}
 	else {
+		// 키보드 HOOK 스레드 멈춤
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
-
-		//CPrintDialog digPrint(FALSE);
-		//if (IDOK == digPrint.DoModal())
-		//{
-		//	// 프린터 정보 얻
-		//}
 	}
 
-	AfxMessageBox(szMsg);
+	AfxMessageBox(_T("\n업데이트 적용"));
 }

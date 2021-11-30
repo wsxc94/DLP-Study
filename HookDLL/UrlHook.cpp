@@ -57,8 +57,6 @@ void UrlHook::FindWindowWidget()
 		string current_site = _com_util::ConvertBSTRToString(bs);
 
 		TRACE(current_site.c_str());
-		
-		//std::cout << current_site << "\n"; //현재 사이트 디버그용
 
 		 //웹 차단 리스트 순회
 		for (string s : urlBlockList) {
