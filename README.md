@@ -1,6 +1,6 @@
 # Data Loss Prevention Solution Study
 ---
-## 소프트웨어 차단
+### 소프트웨어 차단
 * process snapshot
 ## 웹사이트 차단
 * UI Automation
