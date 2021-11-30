@@ -56,8 +56,6 @@ void UrlHook::FindWindowWidget()
 		value->get_CurrentValue(&bs);
 		string current_site = _com_util::ConvertBSTRToString(bs);
 
-		TRACE(current_site.c_str());
-
 		 //웹 차단 리스트 순회
 		for (string s : urlBlockList) {
 			if (current_site.find(s) != string::npos) {

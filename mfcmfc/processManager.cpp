@@ -63,7 +63,7 @@ void processManager::ProcessLoad()
 		do
 		{
 			for (string processName : sw_block_list) {  // 차단 프로세스 리스트 순회
-				if (GetProcessModule(pe32.th32ProcessID, processName))
+				if (GetProcessModule(pe32.th32ProcessID, processName)) // 프로세스 id로 해당 모듈을 불러온다.
 				{
 					// 프로세스 ID를 통해 해당 프로세스 핸들을 얻어온다
 					HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pe32.th32ProcessID);
@@ -75,8 +75,7 @@ void processManager::ProcessLoad()
 							unsigned long nCode; //프로세스 상태 코드
 							GetExitCodeProcess(hProcess, &nCode); // 프로세스 종료 함수
 							cout << processName << "를 차단했습니다." << "\n";
-							AfxMessageBox(_T("소프트웨어 차단"));
-							
+							AfxMessageBox(_T("소프트웨어 차단"));							
 						}
 						CloseHandle(hProcess);
 					}
