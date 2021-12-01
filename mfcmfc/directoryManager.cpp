@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "directoryManager.h"
 
-void directoryManager::FindFileList(string path)
+void directoryManager::FindFileList()
 {
     BROWSEINFO BrInfo;      // 폴더선택 인터페이스
     TCHAR szBuffer[512];    // 경로저장 버퍼 
@@ -17,47 +17,56 @@ void directoryManager::FindFileList(string path)
     LPITEMIDLIST pItemIdList = ::SHBrowseForFolder(&BrInfo);    // 폴더 리스트
     ::SHGetPathFromIDList(pItemIdList, szBuffer);               // 파일경로 읽어오기
 
-    // 경로를 가져와 사용할 경우, Edit Control 에 값 저장
     CString str;
     str.Format(_T("%s"), szBuffer);
 
-    path = string(CT2CA(str));
-    path += '\\\\';
-    path += '*';
+    if (str.IsEmpty()) return;
 
-    WIN32_FIND_DATAA data;  //경로를 통해 디렉토리 데이터 받아올 변수
+    // 선택한 파일 or 디렉토리의 경로를 받아온다
+    string path = string(CT2CA(str)) + char('\\\\') + '*';
 
-    try
+    queue<string> q_path;       // 파일 경로 queue
+    q_path.push(path);
+    path.pop_back();
+
+    WIN32_FIND_DATAA data; // 파일 데이터를 받아올 변수
+
+    while (!q_path.empty())
     {
-        // 파일 경로로 핸들을 얻어온다
-        HANDLE hFind = FindFirstFileA(path.c_str(), &data);
+        string current_path = q_path.front(); // 현재 경로를 가져온다
+        q_path.pop();
+ 
+        HANDLE hFind = FindFirstFileA(current_path.c_str(), &data); // 현재 경로 데이터의 핸들을 가져온다
 
-        // 실패시 오류 return
-        if (hFind == INVALID_HANDLE_VALUE) throw runtime_error("FindFirstFile 실패");
+        // 파일 열기가 실패하면 return
+        if (hFind == INVALID_HANDLE_VALUE) continue;
 
-        while (FindNextFileA(hFind , &data))
+        while (FindNextFileA(hFind, &data))
         {
             // 시스템 파일을 제외한 디렉토리 파일 추가
             if ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) &&
                 !(data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM)) {
                 dirList.push_back(string(data.cFileName));
+
+                if (string(data.cFileName) == "..") continue;
+                  
+                // 다음 폴더 경로를 queue에 push 한다
+                string next_path = current_path;                  
+                next_path.pop_back();      
+                next_path += string(data.cFileName) + char('\\\\') + '*';                  
+                q_path.push(next_path);
             }
             // 시스템 파일을 제외한 일반 파일 추가
             else if ((data.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) &&
                 !(data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM))
             {
+                // 일반 파일 리스트에 push한다
                 fileList.push_back(string(data.cFileName));
             }
         }
-
-        FindClose(hFind);
-
-        testOutput(path);       // 테스트 출력
+        FindClose(hFind);     
     }
-    catch (runtime_error e)
-    {
-        cerr << e.what() << "\n";
-    }
+    FindFileInfo(path);       // 테스트 출력
 }
 
 /*
@@ -141,7 +150,7 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
     SAFE_DELETE_ARRAY(tmp);
 }
 
-void directoryManager::testOutput(string path) // 디렉토리 출력 test 함수
+void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
 {
     cout << "파일 리스트" << "\n";
     for (string s : fileList) {

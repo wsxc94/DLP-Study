@@ -40,6 +40,7 @@ using namespace std;
 #include <afxmt.h>					// 멀티 스레드 어플리케이션을 위한 동기화 객체 헤더
 #include <vector>					// STL vector
 #include <map>						// STL map
+#include <queue>					// STL queue
 #include <string>					// 문자열 string 헤더
 #include <memory>					// 스마트 포인터 및 메모리 관련 헤더
 #include <algorithm>				// STL algorithm
