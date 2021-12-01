@@ -61,7 +61,11 @@ void directoryManager::FindFileList()
                 !(data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM))
             {
                 // 일반 파일 리스트에 push한다
-                fileList.push_back(string(data.cFileName));
+                string filepath = current_path;
+                filepath.pop_back();
+                filepath += string(data.cFileName);
+                //fileList.push_back(string(data.cFileName));
+                fileList.push_back(filepath);
             }
         }
         FindClose(hFind);     
@@ -152,22 +156,58 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
 
 void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
 {
-    cout << "파일 리스트" << "\n";
-    for (string s : fileList) {
-        cout << s << "\n";
-    }
-    cout << "\n";
-    
-    cout << "디렉토리 리스트" << "\n";
-    for (string s : dirList)
+    for (int i = 0; i < fileList.size(); i++)
     {
-        cout << s << "\n";
-    }
-    cout << "\n";
-    
-    fileList.clear();
-    dirList.clear();
+        try
+        {
+            FILE* p;
+            p = fopen(fileList[i].c_str(), "rb");	//읽기 전용 오픈
+            if (p == NULL) throw runtime_error("파일 읽기 실패");	// 읽기 실패시 종료
 
+            char* ch;			// 암호화 코드 저장 변수
+            int size;			// 파일 사이즈 저장 변수
+
+            fseek(p, 0, SEEK_END);	// 파일의 끝으로 간다
+            size = ftell(p);		// 파일의 사이즈를 얻는다
+            fseek(p, 0, SEEK_SET);	// 파일의 처음으로 간다
+
+            ch = new char[sizeof(char) * size];	// 파일 사이즈 만큼 동적할당
+
+            size = fread(ch, sizeof(char), size, p);	//파일 내용을 읽은 뒤 변수 ch에 파일의 내용을 넣는다
+            fclose(p); // p 파일 닫기
+
+            string buf = ch;
+
+            if (buf.find("@") != string::npos) {
+                cout << fileList[i] << " 에서 민감정보가 발견되었습니다." << "\n";
+                cout << "내용 : " << buf << "\n\n";
+            }
+
+            delete[] ch;
+        }
+        catch (runtime_error e)
+        {
+            cerr << e.what() << "\n";
+            return;
+        }
+    }
+
+    //cout << "파일 리스트" << "\n";
+    //for (string s : fileList) {
+    //    cout << s << "\n";
+    //}
+    //cout << "\n";
+    //
+    //cout << "디렉토리 리스트" << "\n";
+    //for (string s : dirList)
+    //{
+    //    cout << s << "\n";
+    //}
+    //cout << "\n";
+    //
+    //fileList.clear();
+    //dirList.clear();
+    cout << "\n\n";
     string dir = "C:/Users/USER/Desktop";
 
     cout << "c++ 17 filesystem" << "\n";

@@ -299,8 +299,8 @@ void cryptoManager::StartThread(bool check)
 UINT cryptoManager::EncryptoThread(LPVOID aParam)
 {
 	cryptoManager* pThis = (cryptoManager*)aParam;
-	//pThis->Encryption();
-	pThis->OpenSSL(true);
+	pThis->Encryption();
+	//pThis->OpenSSL(true);
 
 	return 0;
 }
@@ -308,8 +308,8 @@ UINT cryptoManager::EncryptoThread(LPVOID aParam)
 UINT cryptoManager::DecryptoThread(LPVOID aParam)
 {
 	cryptoManager* pThis = (cryptoManager*)aParam;
-	//pThis->Decryption();
-	pThis->OpenSSL(false);
+	pThis->Decryption();
+	//pThis->OpenSSL(false);
 
 	return 0;
 }
