@@ -59,10 +59,9 @@ LRESULT hookManager::KeyboardProc(int code, WPARAM wParam, LPARAM lParam)
 		{
 			// lParam이 가리키는 곳에서 키코드를 읽는다.
 			if (pKey->vkCode == ',') return 1; // print screen 키차단
-			cout << (char)pKey->vkCode << "\n";	// keyCode 출력 확인용
+			cout << "현재 누른 키 : " << (char)pKey->vkCode << "\n";	// keyCode 출력 확인용
 		}
 	}
-	
 	CallNextHookEx(hHook, code, wParam, lParam);	//다음 HOOK으로 넘어감
 
 	return 0;

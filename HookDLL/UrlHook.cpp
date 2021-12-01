@@ -29,7 +29,7 @@ void UrlHook::FindWindowWidget()
 		hwnd = FindWindowEx(0, hwnd, L"Chrome_WidgetWin_1", NULL);
 
 		if (!hwnd) break; //핸들이 없으면 종료
-		if (!IsWindowVisible(hwnd)) continue; // 윈도우가 존재하지않으면
+		if (!IsWindowVisible(hwnd)) continue; // 현재 윈도우가 보이지 않으면 continue
 
 		// UI 오토메이션
 		CComQIPtr<IUIAutomation> uia;
@@ -52,6 +52,7 @@ void UrlHook::FindWindowWidget()
 		// edit의 value pattern을 받아와 현재의 url 값을 받아온다.
 		CComPtr<IUIAutomationValuePattern> value;
 		edit->GetCurrentPatternAs(UIA_ValuePatternId, IID_PPV_ARGS(&value));
+
 		BSTR bs;
 		value->get_CurrentValue(&bs);
 		string current_site = _com_util::ConvertBSTRToString(bs);
