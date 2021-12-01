@@ -39,6 +39,7 @@
 #include <Windows.h>				// 윈도우의 핸들을 얻어 오는 헤더
 #include <vector>					// STL vector
 #include <string>					// 문자열 string 헤더
+#include <string.h>
 #include <memory>					// 스마트 포인터 및 메모리 관련 헤더
 #include <algorithm>				// STL algorithm
 #include <cctype>					// 대소문자변환

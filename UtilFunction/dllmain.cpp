@@ -65,6 +65,16 @@ DLL_UTIL char* ConvertWCtoC(wchar_t* str) // wchar_t -> char*
     return pStr;
 }
 
+DLL_UTIL std::string ConvertTCtoSTR(TCHAR* tc)
+{
+    int len = wcslen((wchar_t*)tc);
+    char* psz = new char[2 * len + 1];
+
+    wcstombs(psz, (wchar_t*)psz, 2 * len + 1);
+    std::string str = psz;
+    return str;
+}
+
 DLL_UTIL wchar_t* ConvertCharToWC(char* str)
 {
     wchar_t* output = nullptr; {}

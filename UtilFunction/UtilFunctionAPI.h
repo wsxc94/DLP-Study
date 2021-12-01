@@ -7,7 +7,8 @@
 #endif // _DLL_UTIL_
 
 // 사용자 유틸 함수들
-DLL_UTIL inline char* ConvertWCtoC(wchar_t* str);								// wchar_t -> char 변수
+DLL_UTIL char* ConvertWCtoC(wchar_t* str);								// wchar_t -> char 변수
+DLL_UTIL std::string ConvertTCtoSTR(TCHAR* tc);								// tchar -> string 변수
 DLL_UTIL wchar_t* ConvertCharToWC(char* str);							// char -> wchar_t
 DLL_UTIL bool compareString(std::string a, std::string b);							// string 대문자 변환 및 비교
 DLL_UTIL HWND GetHwndFromProcessHandle(HANDLE hProcess);					// HANDLE -> HWND
