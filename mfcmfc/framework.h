@@ -53,6 +53,7 @@ using namespace std;
 #include <fstream>					// 파일 입출력 헤더
 #include <filesystem>				// 파일 시스템 헤더
 #include <conio.h>					// 콘솔 input output 헤더
+#include <regex>					// 정규 표현식 헤더
 
 /*******************************
 ********* 사용자 헤더 ***********
