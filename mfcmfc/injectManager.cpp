@@ -50,31 +50,22 @@ bool injectManager::Dll_injection(const wstring& dll_name)
         //해당 PID를 가진 프로세스를 열어 핸들을 가져온다
         process_handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pid);
 
-        if (process_handle == nullptr) {
-            break;
-        }
-        //해당 프로세스의 가상 메모리 공간에 메모리를 할당함. 
-        remote_buffer = VirtualAllocEx(
-            process_handle,
-            nullptr,
-            dll_name.size(),
-            MEM_COMMIT,
-            PAGE_READWRITE
-        );
+        if (process_handle == nullptr) break;
+        //해당 프로세스의 가상 메모리 공간에 메모리를 할당함.
+		// 프로세스 주소 공간에 대해 사용할 영역을 미리 할당하여 준비작업을 해놓고 
+		//실제 사용하기위해 물리적 저장소 할당 및 할당된 영역과 주소에 매핑작업을 해줌
+		remote_buffer = VirtualAllocEx(
+			process_handle,
+			nullptr,
+			dll_name.size(),
+			MEM_COMMIT, 
+			PAGE_READWRITE
+		);
 
         // remote_buffer에 담긴 할당된 메모리 공간에 로드될 DLL의 경로 스트링을 wrtie 한다.
-        if (!remote_buffer) {
-            break;
-        }
-        if (!WriteProcessMemory(
-            process_handle,
-            remote_buffer,
-            dll_name.c_str(),
-            dll_name.size() * sizeof(wchar_t),
-            nullptr)
-            ) {
-            break;
-        }
+        if (!remote_buffer) break;
+
+        if (!WriteProcessMemory(process_handle, remote_buffer, dll_name.c_str(), dll_name.size() * sizeof(wchar_t), nullptr)) break;
 
         //kernel32.dll 모듈의 핸들을 가져옴 
         module = GetModuleHandle(L"kernel32.dll");
