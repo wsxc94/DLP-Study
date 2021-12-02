@@ -1,6 +1,13 @@
 #include "pch.h"
 #include "directoryManager.h"
 
+void directoryManager::StartThread() {
+
+    directoryManager* param = new directoryManager;
+    param = this;
+
+    thread = AfxBeginThread(FindFileThread, param);
+}
 void directoryManager::FindFileList()
 {
     BROWSEINFO BrInfo;      // 폴더선택 인터페이스
@@ -27,6 +34,7 @@ void directoryManager::FindFileList()
 
     queue<string> q_path;       // 파일 경로 queue
     q_path.push(path);
+
     path.pop_back();
 
     WIN32_FIND_DATAA data; // 파일 데이터를 받아올 변수
@@ -38,7 +46,7 @@ void directoryManager::FindFileList()
  
         HANDLE hFind = FindFirstFileA(current_path.c_str(), &data); // 현재 경로 데이터의 핸들을 가져온다
 
-        // 파일 열기가 실패하면 return
+        // 파일 열기가 실패하면 다음 루프로 간다
         if (hFind == INVALID_HANDLE_VALUE) continue;
 
         while (FindNextFileA(hFind, &data))
@@ -60,7 +68,7 @@ void directoryManager::FindFileList()
             else if ((data.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) &&
                 !(data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM))
             {
-                // 일반 파일 리스트에 push한다
+                // 일반 파일 리스트에 push_back한다
                 string filepath = current_path;
                 filepath.pop_back();
                 filepath += string(data.cFileName);
@@ -125,7 +133,7 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
 
     wchar_t* tmp = ConvertCharToWC(buf);
     
-    cout << tmp << "  " << buf << "\n";
+    std::cout << tmp << "  " << buf << "\n";
     HANDLE hHandle = FindFirstFile(tmp, &FindFileData);
     
     for (; hHandle != INVALID_HANDLE_VALUE; )
@@ -156,15 +164,19 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
 
 void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
 {
-    for (int i = 0; i < fileList.size(); i++)
+    regex email("[[:w:]]+@[[:w:]]+\.com");  // 이메일 정규표현식
+    regex resident_num("([0-9]{6})([\\s]{0,1})([-]?)([\\s]{0,1})([0-9]{6})");   // 주민등록번호 정규표현식
+    smatch sm; // 매칭된 문자열을 받아올 변수
+
+    for (string file_path : fileList)
     {
         try
         {
             FILE* p;
-            p = fopen(fileList[i].c_str(), "rb");	//읽기 전용 오픈
-            if (p == NULL) throw runtime_error("파일 읽기 실패");	// 읽기 실패시 종료
+            p = fopen(file_path.c_str(), "rb");	//읽기 전용 오픈
+            if (p == NULL) throw runtime_error(file_path + " 파일 읽기 실패");	// 읽기 실패시 종료
 
-            char* ch;			// 암호화 코드 저장 변수
+            char* ch;			// 파일 내용을 받아올 변수
             int size;			// 파일 사이즈 저장 변수
 
             fseek(p, 0, SEEK_END);	// 파일의 끝으로 간다
@@ -177,10 +189,14 @@ void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
             fclose(p); // p 파일 닫기
 
             string buf = ch;
-
-            if (buf.find("@") != string::npos) {
-                cout << fileList[i] << " 에서 민감정보가 발견되었습니다." << "\n";
-                cout << "내용 : " << buf << "\n\n";
+            // 받아온 내용과 정규표현식을 매칭 한다
+            if (regex_search(buf,sm,email))
+            {
+                std::cout << file_path << " 에서 이메일 형식이 발견되었습니다 : " << sm.str() << "\n";
+            }
+            if (regex_search(buf,sm,resident_num))
+            {
+                std::cout << file_path << " 에서 주민등록번호 형식이 발견되었습니다 : " << sm.str() << "\n";
             }
 
             delete[] ch;
@@ -188,9 +204,9 @@ void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
         catch (runtime_error e)
         {
             cerr << e.what() << "\n";
-            return;
         }
     }
+    std::cout << "검사가 완료되었습니다." << "\n";
 
     //cout << "파일 리스트" << "\n";
     //for (string s : fileList) {
@@ -205,20 +221,30 @@ void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
     //}
     //cout << "\n";
     //
-    //fileList.clear();
-    //dirList.clear();
-    cout << "\n\n";
-    string dir = "C:/Users/USER/Desktop";
+    
+    fileList.clear();
+    dirList.clear();
 
-    cout << "c++ 17 filesystem" << "\n";
+    //std::cout << "\n\n";
+    //string dir = "C:/Users/USER/Desktop";
 
-    path.pop_back();
+    //std::cout << "c++ 17 filesystem" << "\n";
 
-    // dir을 기준으로 디렉토리를 재귀적으로 순회
-    for (auto& p : filesystem::recursive_directory_iterator(path))
-    {
-        path = string(CT2CA(p.path().c_str()));
-        size_t pos = path.rfind('\\');
-        cout << path.substr(pos + 1) << "\n";
-    }
+    //path.pop_back();
+
+    //// dir을 기준으로 디렉토리를 재귀적으로 순회
+    //for (auto& p : filesystem::recursive_directory_iterator(path))
+    //{
+    //    path = string(CT2CA(p.path().c_str()));
+    //    size_t pos = path.rfind('\\');
+    //    std::cout << path.substr(pos + 1) << "\n";
+    //}
+}
+
+UINT directoryManager::FindFileThread(LPVOID aParam)
+{
+    directoryManager* pThis = (directoryManager*)aParam;
+    pThis->FindFileList();
+
+    return 0;
 }
