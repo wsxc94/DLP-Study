@@ -126,7 +126,7 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	if (checkbox3.GetCheck() == BST_CHECKED) // 체크박스3 체크여부 검사
 	{
 		// path를 기준으로 모든 디렉토리 , 파일 리스트 찾기
-		KEEPER_MANAGER->Get_DirectoryMng()->FindFileList();
+		KEEPER_MANAGER->Get_DirectoryMng()->StartThread();
 	}
 
 	if (checkbox4.GetCheck() == BST_CHECKED)	// 체크박스 4 암호화 체크여부
