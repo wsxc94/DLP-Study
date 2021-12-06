@@ -69,11 +69,11 @@ void directoryManager::FindFileList()
                 !(data.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM))
             {
                 // 일반 파일 리스트에 push_back한다
-                string filepath = current_path;
-                filepath.pop_back();
-                filepath += string(data.cFileName);
+                string file_path = current_path;
+                file_path.pop_back();
+                file_path += string(data.cFileName);
                 //fileList.push_back(string(data.cFileName));
-                fileList.push_back(filepath);
+                fileList.push_back(file_path);
             }
         }
         FindClose(hFind);     
