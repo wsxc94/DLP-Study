@@ -131,19 +131,19 @@ void directoryManager::GetFindFileList(char* pszDirectory, char* pszFilter, int 
     if (bAddFolder == true) strcat_s(buf, MAX_PATH, "*.*");
     else strcat_s(buf, MAX_PATH, pszFilter);
 
-    wchar_t* tmp = ConvertCharToWC(buf);
+    wchar_t* tmp = util::ConvertCharToWC(buf);
     
     std::cout << tmp << "  " << buf << "\n";
     HANDLE hHandle = FindFirstFile(tmp, &FindFileData);
     
     for (; hHandle != INVALID_HANDLE_VALUE; )
     {
-        if ((FindFileData.cFileName[0] != '.' || strlen(ConvertWCtoC(FindFileData.cFileName)) > 2) &&
-            (0 != _stricmp(ConvertWCtoC(FindFileData.cFileName), "Replay"))) //  Replay 폴더는 지우지 않는다
+        if ((FindFileData.cFileName[0] != '.' || strlen(util::ConvertWCtoC(FindFileData.cFileName)) > 2) &&
+            (0 != _stricmp(util::ConvertWCtoC(FindFileData.cFileName), "Replay"))) //  Replay 폴더는 지우지 않는다
         {
             strcpy_s(buf, MAX_PATH, pszDirectory);
             strcat_s(buf, MAX_PATH, "\\");
-            strcat_s(buf, MAX_PATH, ConvertWCtoC(FindFileData.cFileName));
+            strcat_s(buf, MAX_PATH, util::ConvertWCtoC(FindFileData.cFileName));
 
             if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {
@@ -190,11 +190,11 @@ void directoryManager::FindFileInfo(string path) // 디렉토리 출력 test 함수
 
             string buf = ch;
             // 받아온 내용과 정규표현식을 매칭 한다
-            if (regex_search(buf,sm,email))
+            if (regex_search(buf, sm, email))
             {
                 std::cout << file_path << " 에서 이메일 형식이 발견되었습니다 : " << sm.str() << "\n";
             }
-            if (regex_search(buf,sm,resident_num))
+            if (regex_search(buf, sm, resident_num))
             {
                 std::cout << file_path << " 에서 주민등록번호 형식이 발견되었습니다 : " << sm.str() << "\n";
             }

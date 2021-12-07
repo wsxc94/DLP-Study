@@ -206,6 +206,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UtilFunction.cpp" />
+    <ClCompile Include="UtilFunctionAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

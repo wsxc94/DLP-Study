@@ -56,7 +56,7 @@ DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)
 
 #include "UtilFunctionAPI.h"
 
-DLL_UTIL char* ConvertWCtoC(wchar_t* str) // wchar_t -> char*
+DLL_UTIL char* util::ConvertWCtoC(wchar_t* str) // wchar_t -> char*
 {
     char* pStr; // memory 해제 유의
     int size = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
@@ -65,7 +65,7 @@ DLL_UTIL char* ConvertWCtoC(wchar_t* str) // wchar_t -> char*
     return pStr;
 }
 
-DLL_UTIL std::string ConvertTCtoSTR(TCHAR* tc)
+DLL_UTIL std::string util::ConvertTCtoSTR(TCHAR* tc)
 {
     int len = wcslen((wchar_t*)tc);
     char* psz = new char[2 * len + 1];
@@ -75,7 +75,7 @@ DLL_UTIL std::string ConvertTCtoSTR(TCHAR* tc)
     return str;
 }
 
-DLL_UTIL wchar_t* ConvertCharToWC(char* str)
+DLL_UTIL wchar_t* util::ConvertCharToWC(char* str)
 {
     wchar_t* output = nullptr; {}
 
@@ -90,7 +90,7 @@ DLL_UTIL wchar_t* ConvertCharToWC(char* str)
     return output;
 }
 
-DLL_UTIL bool compareString(std::string a, std::string b)
+DLL_UTIL bool util::compareString(std::string a, std::string b)
 {
     //a , b 대문자 변환
     transform(a.begin(), a.end(), a.begin(), ::toupper);
@@ -101,7 +101,7 @@ DLL_UTIL bool compareString(std::string a, std::string b)
     return false;
 }
 
-DLL_UTIL HWND GetHwndFromProcessHandle(HANDLE hProcess)
+DLL_UTIL HWND util::GetHwndFromProcessHandle(HANDLE hProcess)
 {
     if (hProcess == NULL) return NULL;
 
@@ -116,7 +116,7 @@ DLL_UTIL HWND GetHwndFromProcessHandle(HANDLE hProcess)
     return NULL;
 }
 
-DLL_UTIL HWND GetHwndFromProcessID(DWORD dwProcessID)
+DLL_UTIL HWND util::GetHwndFromProcessID(DWORD dwProcessID)
 {
     if (dwProcessID == 0 || dwProcessID == -1)
         return NULL;
@@ -132,7 +132,7 @@ DLL_UTIL HWND GetHwndFromProcessID(DWORD dwProcessID)
     return NULL;
 }
 
-DLL_UTIL BOOL CallbackEnumWindowProc(HWND hWnd, LPARAM lParam)
+DLL_UTIL BOOL util::CallbackEnumWindowProc(HWND hWnd, LPARAM lParam)
 {
     HANDLE hTarget = NULL;
     DWORD dwID = 0, dwSrcID = (DWORD)(*(int*)lParam);
@@ -149,7 +149,7 @@ DLL_UTIL BOOL CallbackEnumWindowProc(HWND hWnd, LPARAM lParam)
     return TRUE;
 }
 
-DLL_UTIL DWORD GetProcessIDbyProcessHandle(HANDLE hProcess)
+DLL_UTIL DWORD util::GetProcessIDbyProcessHandle(HANDLE hProcess)
 {
     // http://www.codeproject.com/Articles/21926/Getting-Process-ID-from-Process-Handle
 
@@ -198,7 +198,7 @@ DLL_UTIL DWORD GetProcessIDbyProcessHandle(HANDLE hProcess)
     return dwExitCode;
 }
 
-DLL_UTIL HWND GetHwndFormProcessID(ULONG pid)
+DLL_UTIL HWND util::GetHwndFormProcessID(ULONG pid)
 {
     HWND tempHwnd = FindWindow(NULL, NULL); // 최상위 윈도우 핸들 찾기  
 
@@ -212,7 +212,7 @@ DLL_UTIL HWND GetHwndFormProcessID(ULONG pid)
     return NULL;
 }
 
-DLL_UTIL ULONG ProcIDFromWnd(HWND hwnd)
+DLL_UTIL ULONG util::ProcIDFromWnd(HWND hwnd)
 {
     ULONG idProc;
     GetWindowThreadProcessId(hwnd, &idProc);
