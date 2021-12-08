@@ -44,3 +44,6 @@
 #include <algorithm>				// STL algorithm
 #include <cctype>					// 대소문자변환
 #include <comutil.h>				// 유틸 헤더
+#include <TlHelp32.h>
+#include <Psapi.h>
+#include <set>

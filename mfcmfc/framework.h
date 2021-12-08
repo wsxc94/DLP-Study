@@ -54,6 +54,8 @@ using namespace std;
 #include <filesystem>				// 파일 시스템 헤더
 #include <conio.h>					// 콘솔 input output 헤더
 #include <regex>					// 정규 표현식 헤더
+#include <set>
+#include <Psapi.h>
 
 /*******************************
 ********* 사용자 헤더 ***********
