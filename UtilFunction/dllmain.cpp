@@ -151,12 +151,12 @@ BOOL util::GetProcessPathByPID(DWORD dwPID, CString& strProcessPath)
 	}
 	catch (CString strError)
 	{
-		CString strLog; strLog.Format(_T("[Officekeeper] GetProcessPathByPID Throw %d - [ %s ]\n"), dwPID, strError);
+		CString strLog; strLog.Format(_T("GetProcessPathByPID Throw %d - [ %s ]\n"), dwPID, strError);
 		std::wcout << strLog << "\n";
 	}
 	catch (...)
 	{
-		CString strLog; strLog.Format(_T("[OfficeKeeper] GetProcessPathByPID Throw by Unknown reason - %d \n"), GetLastError());
+		CString strLog; strLog.Format(_T("GetProcessPathByPID Throw by Unknown reason - %d \n"), GetLastError());
 		std::wcout << strLog << "\n";
 	}
 
@@ -414,7 +414,7 @@ int util::GetShortToLongFileName(CString sShortPath, CString& sLongPath)
 	}
 	catch (...)
 	{
-		CString strLog; strLog.Format(_T("[OfficeKeeper] GetShortToLongFileName Throw - %d \n"), GetLastError());
+		CString strLog; strLog.Format(_T("GetShortToLongFileName Throw - %d \n"), GetLastError());
 	}
 
 	//------------------------------------//
