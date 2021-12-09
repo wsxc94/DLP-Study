@@ -503,11 +503,11 @@ DLL_UTIL wchar_t* util::ConvertCharToWC(char* str)
 
 DLL_UTIL bool util::compareString(std::string a, std::string b)
 {
-    //a , b 대문자 변환
+    // a , b 대문자 변환
     transform(a.begin(), a.end(), a.begin(), ::toupper);
     transform(b.begin(), b.end(), b.begin(), ::toupper);
 
-    //a , b 비교
+    // a , b 비교
     if (a == b) return true;
     return false;
 }

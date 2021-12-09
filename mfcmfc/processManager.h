@@ -9,7 +9,7 @@ public:
 	virtual ~processManager();
 
 	BOOL FindProcess(LPCTSTR lpszProcessName, set<DWORD>* stPID = NULL);
-	bool GetProcessModule(DWORD dwPID, string sProcessName); //프로세스 모듈을 불러오는 함수
+	bool GetProcessModule(DWORD pid, string ProcessName); //프로세스 모듈을 불러오는 함수
 	void ProcessLoad(); // 프로세스를 로드하고 리스트를 통해 종료 시키는 함수
 
 	virtual void StartThread();		// 스레드 시작
