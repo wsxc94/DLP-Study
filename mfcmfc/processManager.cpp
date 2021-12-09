@@ -66,7 +66,9 @@ bool processManager::GetProcessModule(DWORD pid, string ProcessName)
 
 	if (QueryFullProcessImageNameW(handle, 0, buffer, &bufferSize)) {
 		// 프로세스의 경로 , 이름을 나눈다
-		string path = util::ConvertWCtoC(buffer);
+		char* tmp = util::ConvertWCtoC(buffer);
+		string path = tmp;
+		SAFE_DELETE_ARRAY(tmp);
 		string name = path.substr(path.rfind('\\') + 1, path.size() - 1);
 
 		if (util::compareString(name, ProcessName)) {
@@ -123,6 +125,7 @@ void processManager::ProcessLoad()
 							cout << processName << "를 차단했습니다." << "\n";
 							AfxMessageBox(_T("소프트웨어 차단"));							
 						}
+						EmptyWorkingSet(hProcess);
 						CloseHandle(hProcess);
 					}
 				}
