@@ -30,4 +30,6 @@ public:
 	CEdit edit1;
 	CButton checkbox5;
 	CButton checkbox6;
+	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedButton3();
 };

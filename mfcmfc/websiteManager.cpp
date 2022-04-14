@@ -10,6 +10,7 @@ websiteManager::websiteManager()
 
 websiteManager::~websiteManager()
 {
+	Unhook();
 }
 
 void websiteManager::WidgetLoad()
@@ -71,6 +72,20 @@ void websiteManager::FindWindowWidget()
 	CoUninitialize();
 }
 
+void websiteManager::Hook()
+{
+	if (LHook != 0) return;
+	CoInitialize(NULL);
+	LHook = SetWinEventHook(EVENT_OBJECT_FOCUS, EVENT_OBJECT_VALUECHANGE, 0, UrlEventHookProc, 0, 0, WINEVENT_OUTOFCONTEXT | WINEVENT_SKIPOWNPROCESS);
+}
+
+void websiteManager::Unhook()
+{
+	if (LHook == 0) return;
+	UnhookWinEvent(LHook);
+	CoUninitialize();
+}
+
 void websiteManager::StartThread()
 {
 	websiteManager* param = new websiteManager;
@@ -83,11 +98,59 @@ UINT websiteManager::ThreadUpdata(LPVOID aParam)
 {
 	websiteManager* pThis = (websiteManager*)aParam;
 
-	while (true)
-	{
-		Sleep(500);
-		pThis->WidgetLoad();
+	//while (true)
+	//{
+	//	Sleep(500);
+	//	pThis->WidgetLoad();
+	//}
+
+	MSG msg;
+
+	pThis->Hook();
+
+	while (GetMessage(&msg, NULL, 0, 0)) {
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
 	}
 
+	pThis->Unhook();
+
 	return 0;
+}
+
+void websiteManager::UrlEventHookProc(HWINEVENTHOOK hWinEventHook, DWORD event, HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime)
+{
+	IAccessible* pAcc = NULL;
+	VARIANT Child;
+
+	HRESULT hr = AccessibleObjectFromEvent(hwnd, idObject, idChild, &pAcc, &Child);
+
+	if ((hr == S_OK) && (pAcc != NULL)) {
+		BSTR urlValue;
+		pAcc->get_accValue(Child, &urlValue);
+
+		if (urlValue == NULL) return;
+
+		char className[500];
+		GetClassName(hwnd, (LPWSTR)className, 500);
+
+		if (event == EVENT_OBJECT_VALUECHANGE) {
+			/*
+			Safari => SafariTaskbarTabWindow
+			Chrome => Chrome_WidgetWin_1
+			IE => IEFrame
+			Firefox => MozillaWindowClass
+			Opera => OperaWindowClass
+			*/
+			if (strcmp(className, "Chrome_WidgetWin_1") != 0) {
+				//printf("Active URL: %ls\n", urlValue);
+				
+				string current_site = _com_util::ConvertBSTRToString(urlValue);
+				cout << current_site << "\n"; //현재 사이트 디버그용
+			
+			}
+		}
+		SysFreeString(urlValue);
+		pAcc->Release();
+	}
 }

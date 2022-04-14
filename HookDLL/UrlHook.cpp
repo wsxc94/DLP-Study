@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "UrlHook.h"
 
+HWINEVENTHOOK g_hook;
+
 UrlHook::UrlHook()
 {
 	// 웹사이트 차단 리스트

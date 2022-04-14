@@ -62,15 +62,18 @@ using namespace std;
 ********************************/
 #include "keeperManager.h"			// 키퍼 매니저 헤더
 #include "uiAutomationManager.h"	// UI 오토메이션 매니저 헤더
-#include "../UtilFunction/UtilFunctionAPI.h" // DLL API 함수 include
-#pragma comment( lib, "UtilFunction.lib")	 // 유틸 함수 정적 DLL 로드 
+#include "../UtilFunction/UtilFunctionAPI.h" // DLL API 함수 헤더
+#pragma comment( lib, "UtilFunction.lib")	 // 유틸 함수 정적 DLL 로드
 //#pragma comment( lib, "HookDLL.lib")
+
+#include <Oleacc.h>
+#pragma comment( lib,"Oleacc.lib")
 
 /*******************************
 ******* Singleton define *******
 ********************************/
 #define KEEPER_MANAGER keeperManager::getSingleton()				// 키퍼 매니저
-#define UIA_MANAGER uiAutomationManager::getSingleton()	// UI 오토메이션 매니저
+//#define UIA_MANAGER uiAutomationManager::getSingleton()				// UI 오토메이션 매니저
 
 /*******************************
 ********* 매크로 define ********
