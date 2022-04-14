@@ -36,6 +36,7 @@
 
 // 외부 추가 헤더
 #include <Windows.h>
+#include <WinUser.h>
 #include <stdio.h>
 #include <tchar.h>
 #include <Psapi.h>	// API 사용

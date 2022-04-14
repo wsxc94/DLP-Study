@@ -103,6 +103,9 @@
     <ClInclude Include="injectManager.h">
       <Filter>정책탭\Manager\header</Filter>
     </ClInclude>
+    <ClInclude Include="ShadowStackApp.h">
+      <Filter>Main\header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="keeperManager.cpp">

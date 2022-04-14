@@ -7,9 +7,6 @@
 #ifndef PCH_H
 #define PCH_H
 
-#define _AFXDLL
-#define _CRT_SECURE_NO_WARNINGS			// 파일 시스템 fopen 경고 차단
-
 // 여기에 미리 컴파일하려는 헤더 추가
 #include "framework.h"
 

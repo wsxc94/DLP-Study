@@ -34,6 +34,8 @@ BEGIN_MESSAGE_MAP(CmfcmfcDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CmfcmfcDlg::OnBnClickedButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, &CmfcmfcDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON3, &CmfcmfcDlg::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -109,18 +111,21 @@ void CmfcmfcDlg::OnBnClickedButton1()
 	if (checkbox2.GetCheck() == BST_CHECKED) // 체크박스2 체크여부 웹사이트 차단
 	{
 		//wstring process_name = L"chrome.exe";
-		wstring process_name = L"msedge.exe";
-		wstring dll_name = L"C:\\Users\\USER\\Desktop\\MfcStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 노트북 주소
-		//wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
+		////wstring process_name = L"msedge.exe";
+		//wstring dll_name = L"C:\\Users\\wsxc94\\Desktop\\DLP-Study\\mfcmfc\\x64\\Release\\HookDLL.dll"; // 노트북 주소
+		////wstring dll_name = L"C:\\Users\\wx94\\Desktop\\DLPStudy\\mfcmfc\\x64\\Debug\\HookDLL.dll"; // 데탑 주소
 
-		if (KEEPER_MANAGER->Get_InjectMng()->Process_name_to_pid(process_name)) {
-			KEEPER_MANAGER->Get_InjectMng()->Dll_injection(dll_name);
-		}
+		//if (KEEPER_MANAGER->Get_InjectMng()->Process_name_to_pid(process_name)) {
+		//	if (KEEPER_MANAGER->Get_InjectMng()->Dll_injection(dll_name))
+		//	{
+		//		cout << "dll inject ok" << "\n";
+		//	}
+		//}
 
-		//KEEPER_MANAGER->Get_WebsiteMng()->checkThread();	// 웹사이트 감시 스레드 실행상태 체크
+		KEEPER_MANAGER->Get_WebsiteMng()->checkThread();	// 웹사이트 감시 스레드 실행상태 체크
 	}
 	else {
-		//KEEPER_MANAGER->Get_WebsiteMng()->suspendThread();	// 스레드 멈춤
+		KEEPER_MANAGER->Get_WebsiteMng()->suspendThread();	// 스레드 멈춤
 	}
 
 	if (checkbox3.GetCheck() == BST_CHECKED) // 체크박스3 체크여부 검사
@@ -150,5 +155,56 @@ void CmfcmfcDlg::OnBnClickedButton1()
 		KEEPER_MANAGER->Get_HookMng()->suspendThread();
 	}
 
+	CString str;
+	GetDlgItemText(IDC_EDIT1, str);
+	
+	if (!str.IsEmpty())
+	{
+		DWORD pid = KEEPER_MANAGER->Get_ProcessMng()->GetProcessByName(str);
+		BOOL active = FALSE;
+
+		KEEPER_MANAGER->Get_ShadowStackMng()->CheckShadowStackByProcessPIDName(pid, str, active);
+
+		if (active)
+		{
+			cout << "보호 모드 사용 중" << "\n";
+		}
+		else
+		{
+			cout << "보호 모드 사용 안함" << "\n";
+		}
+	}
+
 	AfxMessageBox(_T("\n업데이트 적용"));
+}
+
+
+void CmfcmfcDlg::OnBnClickedButton2()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	CString str;
+	GetDlgItemText(IDC_EDIT1, str);
+
+	DWORD pid = KEEPER_MANAGER->Get_ProcessMng()->GetProcessByName(str);
+
+	if (KEEPER_MANAGER->Get_ShadowStackMng()->SetShadowStackOptionByProcessPIDName(pid, str, FALSE))
+	{
+		AfxMessageBox(_T("프로세스 재실행시 보호 모드 적용"));
+	}
+}
+
+void CmfcmfcDlg::OnBnClickedButton3()
+{
+	// TODO: 여기에 컨트롤 알림 처리기 코드를 추가합니다.
+
+	CString str;
+	GetDlgItemText(IDC_EDIT1, str);
+
+	DWORD pid = KEEPER_MANAGER->Get_ProcessMng()->GetProcessByName(str);
+
+	if (KEEPER_MANAGER->Get_ShadowStackMng()->SetShadowStackOptionByProcessPIDName(pid, str, TRUE))
+	{
+		AfxMessageBox(_T("프로세스 재실행시 보호 모드 해제 적용"));
+	}
 }

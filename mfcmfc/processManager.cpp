@@ -4,8 +4,8 @@
 processManager::processManager()
 {
 	// 소프트웨어 차단 리스트
-	sw_block_list.emplace_back("notepad.exe");
-	//soft_block_list.emplace_back("msedge.exe");
+	sw_block_list.emplace_back(_T("notepad.exe"));
+	//sw_block_list.emplace_back(_T("chrome.exe"));
 }
 
 processManager::~processManager()
@@ -86,15 +86,32 @@ bool processManager::GetProcessModule(DWORD pid, string ProcessName)
 
 }
 
+DWORD processManager::GetProcessByName(CString name)
+{
+	DWORD process_id_array[1024];
+	DWORD bytes_returned;
+	DWORD num_processes;
+	HANDLE hProcess;
+	WCHAR image_name[MAX_PATH] = { 0, };
+
+	DWORD i;
+	EnumProcesses(process_id_array, 1024 * sizeof(DWORD), &bytes_returned);
+	num_processes = (bytes_returned / sizeof(DWORD));
+	for (i = 0; i < num_processes; i++) {
+		hProcess = OpenProcess(PROCESS_ALL_ACCESS, TRUE, process_id_array[i]);
+		if (GetModuleBaseName(hProcess, 0, image_name, 256)) {
+			if (!wcscmp(image_name, name)) {
+				CloseHandle(hProcess);
+				return process_id_array[i];
+			}
+		}
+		CloseHandle(hProcess);
+	}
+	return 0;
+}
+
 void processManager::ProcessLoad()
 {
-	/*if (FindProcess(_T("notepad.exe"))) {
-		cout << "있음" << "\n";
-	}
-	else {
-		cout << "없음" << "\n";
-	}*/
-
 	HANDLE         hProcessSnap = NULL;		// 프로세스를 받아올 핸들
 	PROCESSENTRY32 pe32 = { 0 };			// 프로세스 정보 변수
 
@@ -110,21 +127,24 @@ void processManager::ProcessLoad()
 		MODULEENTRY32 me32 = { 0 };
 		do
 		{
-			for (string processName : sw_block_list) {  // 차단 프로세스 리스트 순회
-				if (GetProcessModule(pe32.th32ProcessID, processName)) // 프로세스 id로 해당 모듈을 불러온다.
+			for (CString processName : sw_block_list) {  // 차단 프로세스 리스트 순회
+				USES_CONVERSION;
+				string pName = string(CT2CA(processName));
+				if (GetProcessModule(pe32.th32ProcessID, pName)) // 프로세스 id로 해당 모듈을 불러온다.
 				{
 					// 프로세스 ID를 통해 해당 프로세스 핸들을 얻어온다
 					HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, pe32.th32ProcessID);
 					if (hProcess)
-					{
-						// 프로세스가 실행중이라면
+					{						
+						 // 프로세스가 실행중이라면
 						if (TerminateProcess(hProcess, 0))
 						{
 							unsigned long nCode; //프로세스 상태 코드
 							GetExitCodeProcess(hProcess, &nCode); // 프로세스 종료 함수
 							cout << processName << "를 차단했습니다." << "\n";
-							AfxMessageBox(_T("소프트웨어 차단"));							
+							AfxMessageBox(_T("소프트웨어 차단"));
 						}
+						
 						EmptyWorkingSet(hProcess);
 						CloseHandle(hProcess);
 					}
@@ -132,6 +152,7 @@ void processManager::ProcessLoad()
 			}
 		} while (Process32Next(hProcessSnap, &pe32)); //다음 프로세스의 정보를 구하여 있으면 루프를 돈다.
 	}
+
 	CloseHandle(hProcessSnap);
 }
 
